@@ -8,9 +8,9 @@ public class QuestionManager : MonoBehaviour
     [SerializeField] private LargeLanguageService llm;
     [SerializeField] private TMP_Text questionText; 
     [SerializeField] private TMP_InputField answerField;
+    [SerializeField] private BattleManager battleManager;
 
-    // [SerializeField] private float enemyHP;
-    // [SerializeField] private float playerHP;
+    private string pendingAction; // "attack" / "defend"
 
     private string currentJapanese;
     
@@ -36,6 +36,12 @@ public class QuestionManager : MonoBehaviour
         return "N1"; // Dungeon 10 final boss
     }
     
+    public void AskQuestionForAction(string action)
+    {
+        pendingAction = action;
+        GenerateQuestion();
+    }
+
     void GenerateQuestion()
     {
         // ini nanti kategori sesuai enemy type, dimap tuh ke question type
@@ -58,18 +64,14 @@ public class QuestionManager : MonoBehaviour
     {
         Debug.Log("Score: " + resp.score);
 
-        // if (resp.score >= 80f)
-        // {
-        //     enemyHP -= resp.score;
-        // }
-        // else
-        // {
-        //     playerHP -= (100f - resp.score);
-        // }
-
         // clear input & next word
         answerField.text = "";
-        GenerateQuestion();
+
+        // KASIH SCORE KE BATTLE MANAGER
+        battleManager.OnActionEvaluated(pendingAction, resp.score);
+
+        // Reset
+        pendingAction = null;
     }
 
     private void OnEvaluateError(string message)

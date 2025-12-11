@@ -25,8 +25,7 @@ public class PlayerAttack : MonoBehaviour
             playerData.enemyBattledID = targetEnemyID;
 
             SceneManager.LoadScene("Battle Scene");
-            gameObject.GetComponent<SpriteRenderer>().enabled = false;
-            this.enabled = false;
+            PlayerInstance.instance.Disabler();
         }
     }
 }
