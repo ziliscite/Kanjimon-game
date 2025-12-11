@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2973493205810856938}
   - component: {fileID: 1467281485955274041}
   - component: {fileID: 9072780052486625959}
-  - component: {fileID: 3115607042576446106}
   - component: {fileID: 2468138706943595486}
   - component: {fileID: 1067920098337770825}
   m_Layer: 0
@@ -110,18 +109,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.3, y: 0.3}
   m_EdgeRadius: 0
---- !u!114 &3115607042576446106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 838691679218435841}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6692b582e987cf04ab0904ca91041ef2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TriggerBattle
 --- !u!212 &2468138706943595486
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -192,7 +179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b27fe8031fd67514aabeca54d1d1df5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  enemyDataSO: {fileID: 11400000, guid: d8a4e2c1008f4c74faf393d8276e1479, type: 2}
+  enemyDataSO: {fileID: 11400000, guid: a5279bf58223b6a43acbcf4059b4f627, type: 2}
 --- !u!1 &8877335833954402419
 GameObject:
   m_ObjectHideFlags: 0

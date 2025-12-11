@@ -10,11 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9cc4f2f44fb153c4dbbc3af582c1c01d, type: 3}
-  m_Name: Enemy 2
+  m_Name: Goblin Amber
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  enemyID: 0
-  enemyName: Orc
-  hp: 100
+  enemyID: 1
+  enemyName: Goblin Amber
+  hp: 150
   attack: 5
   exp: 5
-  enemyPrefab: {fileID: 4268597424691880558, guid: 8a60da2ed3c90ed44a30c51fecf3ce87, type: 3}

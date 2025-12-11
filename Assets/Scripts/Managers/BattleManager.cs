@@ -4,33 +4,37 @@ public class BattleManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] enemyList;
     [SerializeField] private Transform spawnPoint;
+    [SerializeField] private PlayerData playerData;
     public int currentEnemyID;
 
-
+    void Awake()
+    {
+        playerData = FindFirstObjectByType<PlayerData>();
+        currentEnemyID = playerData.enemyBattledID;
+    }
     void Start()
     {
-        EnemyDataSO data = GameManager.instance.currentEnemy;
-        currentEnemyID = data.enemyID;
-
-        Instantiate(data.enemyPrefab, spawnPoint.position, Quaternion.identity);
+        SpawnEnemy(currentEnemyID);
     }
 
-    // public void UpdateHealth()
-    // {
-    //     if 
-    // }
-
-    // void SpawnEnemy()
-    // {
-    //     switch (currentEnemyID)
-    //     {
-    //         case 1:
-    //             Instantiate(enemyList[0], spawnPoint.position, Quaternion.identity);
-    //             break;
-    //         default:
-    //             Debug.Log("No enemy spawned");
-    //             break;
-    //     }
-    // }
+    private void SpawnEnemy(int enemyID)
+    {
+        switch (enemyID)
+        {
+            case 1:
+                Instantiate(enemyList[0], spawnPoint.position, Quaternion.identity);
+                break;
+            case 2:
+                Instantiate(enemyList[1], spawnPoint.position, Quaternion.identity);
+                break;
+            case 3:
+                Instantiate(enemyList[2], spawnPoint.position, Quaternion.identity);
+                break;
+            default:
+                Debug.LogError("Invalid enemy ID: " + enemyID);
+                break;
+        }
+        Debug.Log("Spawned Enemy ID: " + enemyID);
+    }
 }
 

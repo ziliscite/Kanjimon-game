@@ -9,15 +9,15 @@ public class QuestionManager : MonoBehaviour
     [SerializeField] private TMP_Text questionText; 
     [SerializeField] private TMP_InputField answerField;
 
-    [SerializeField] private float enemyHP;
-    [SerializeField] private float playerHP;
+    // [SerializeField] private float enemyHP;
+    // [SerializeField] private float playerHP;
 
     private string currentJapanese;
     
     void Start()
     {
-        enemyHP = GameManager.instance.currentEnemy.hp;
-        playerHP = 100; // eksampel
+        // enemyHP = GameManager.instance.currentEnemy.hp;
+        // playerHP = 100; // eksampel
         GenerateQuestion();
     }
     
@@ -58,14 +58,14 @@ public class QuestionManager : MonoBehaviour
     {
         Debug.Log("Score: " + resp.score);
 
-        if (resp.score >= 80f)
-        {
-            enemyHP -= resp.score;
-        }
-        else
-        {
-            playerHP -= (100f - resp.score);
-        }
+        // if (resp.score >= 80f)
+        // {
+        //     enemyHP -= resp.score;
+        // }
+        // else
+        // {
+        //     playerHP -= (100f - resp.score);
+        // }
 
         // clear input & next word
         answerField.text = "";

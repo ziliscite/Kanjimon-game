@@ -1,5 +1,4 @@
 using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -20,10 +19,6 @@ public class PlayerMovement : MonoBehaviour
   [SerializeField] private GameObject attackBox;
   [SerializeField] private float boxOffset;
 
-  [Header ("Other References")]
-  [SerializeField] private TriggerBattle triggerBattle;
-  [SerializeField] private EnemyChecker enemyChecker;
-
   void Start()
   {
     rb = GetComponent<Rigidbody2D>();
@@ -33,8 +28,6 @@ public class PlayerMovement : MonoBehaviour
   void Awake()
   {
     character = this.gameObject;
-    triggerBattle = this.GetComponent<TriggerBattle>();
-    enemyChecker = attackBox.GetComponent<EnemyChecker>();
   }
 
   void Update()
@@ -63,27 +56,5 @@ public class PlayerMovement : MonoBehaviour
     animator.SetFloat("Y", movement.y);
 
     animator.SetBool("isMove", !context.canceled);
-  }
-
-  public void OnAttack(InputAction.CallbackContext context)
-  {
-      if (context.performed)
-      {
-          AttackAction();
-      }
-  }
-
-  private void AttackAction()
-  {
-      if (enemyChecker != null && enemyChecker.enemyInsideRange)
-      {
-        EnemyData enemyData = enemyChecker.targetEnemy.GetComponent<EnemyData>();
-
-        GameManager.instance.currentEnemy = enemyData.enemyDataSO;
-
-          triggerBattle?.EnterBattle();
-          gameObject.GetComponent<SpriteRenderer>().enabled = false;
-          this.enabled = false;
-      }
   }
 }
