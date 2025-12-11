@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
@@ -39,11 +40,11 @@ public class Walker : MonoBehaviour
     // reference to another class
     [SerializeField] private PlayerHandler playerHandler;
     [SerializeField] private TeleporterHandler teleporterHandler;
-    [SerializeField] private PotionPlacer potionPlacer;
+    [SerializeField] private ObjectPlacer potionPlacer;
+    [SerializeField] private ObjectPlacer enemyPlacer;
     
     // Grid and walker management variable
     private bool[,] _visitedTiles; // keep track of visited tiles
-    private int[] _tileIds; // keep track of tile ids
     
     private Vector2Int _gridSize; 
     // borders
@@ -75,11 +76,12 @@ public class Walker : MonoBehaviour
         }
     }
 
+    // defaultnya mati le, nanti bikin trigger aja ketika pindah dari level 1 ke dungeon, panggil block of code dibawah
     void Start()
     {
         // restart all level data, ntar apus kl dah beneer
         levelManager.DeleteAllLevelData();
-        
+        CalculateGridBounds();
         TriggerRegenerate();
     }
     
@@ -365,12 +367,7 @@ public class Walker : MonoBehaviour
         else
         {
             Debug.Log("[Walker] No saved data -> generating new level");
-            GenerateLevel();
-            if (playerHandler != null) playerHandler.RegeneratePlayer();
-            if (teleporterHandler != null)
-            {
-                GenerateAndSaveWhenDoorsReady();
-            }
+            TriggerRegenerate();
         }
     }
 
@@ -431,11 +428,18 @@ public class Walker : MonoBehaviour
     
     private void TriggerRegenerate()
     {
-        CalculateGridBounds();
         GenerateLevel();
         
         // trigger potion placement for the first time
-        if (potionPlacer != null) potionPlacer.OnLevelGenerated();
+        if (enemyPlacer != null)
+        {
+            enemyPlacer.OnLevelGenerated();
+        }
+
+        if (potionPlacer != null)
+        {
+            potionPlacer.OnLevelGenerated();
+        }
         
         if (playerHandler != null)
         {
