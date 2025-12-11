@@ -904,7 +904,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHandler
   walker: {fileID: 1128634894}
   groundTilemap: {fileID: 1553544318}
-  playerPrefab: {fileID: 5127883668752427805, guid: 5a125d423147d0f49a4b9cd6f9f14c0b, type: 3}
+  playerPrefab: {fileID: 4048857156291038768, guid: 03f9068fff9d34a4b8af468eccecef80, type: 3}
   virtualCamera: {fileID: 974261875}
 --- !u!4 &1112388360
 Transform:
@@ -1286,6 +1286,51 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1644180582
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1644180584}
+  - component: {fileID: 1644180583}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1644180583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1644180582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 457f0fa084ae7684cadadd5561443774, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  currentEnemy: {fileID: 0}
+--- !u!4 &1644180584
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1644180582}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.01269, y: -2.37315, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2081487755
 GameObject:
   m_ObjectHideFlags: 0
@@ -1348,3 +1393,4 @@ SceneRoots:
   - {fileID: 2081487756}
   - {fileID: 1099781519}
   - {fileID: 1224228879}
+  - {fileID: 1644180584}

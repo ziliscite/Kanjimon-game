@@ -14,11 +14,10 @@ GameObject:
   - component: {fileID: 2493310540518731963}
   - component: {fileID: 3277546726093415493}
   - component: {fileID: 2722300359941472042}
-  - component: {fileID: 5400272986237952636}
   - component: {fileID: 6010554407873798603}
   - component: {fileID: 5058451300828375568}
   m_Layer: 0
-  m_Name: Player
+  m_Name: PlayerRoaming
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -270,18 +269,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6692b582e987cf04ab0904ca91041ef2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TriggerBattle
---- !u!114 &5400272986237952636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4048857156291038768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9fa210446b4723e47ae7bccb990248ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInstance
 --- !u!95 &6010554407873798603
 Animator:
   serializedVersion: 7
