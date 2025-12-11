@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cc4f2f44fb153c4dbbc3af582c1c01d, type: 3}
+  m_Name: Enemy 2
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyID: 0
+  enemyName: Orc
+  hp: 100
+  attack: 5
+  exp: 5
+  enemyPrefab: {fileID: 4268597424691880558, guid: 8a60da2ed3c90ed44a30c51fecf3ce87, type: 3}
