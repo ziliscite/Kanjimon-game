@@ -258,7 +258,7 @@ public class TeleporterHandler : MonoBehaviour
         LoadExit();
     }
     
-    public void LoadDoor(DoorData entry, DoorData exit)
+    public void LoadDoor(TeleporterPosition entry, TeleporterPosition exit)
     {
         _entryPosition = new Vector2Int(entry.x, entry.y);
         _exitPosition = new Vector2Int(exit.x, exit.y);
@@ -272,14 +272,14 @@ public class TeleporterHandler : MonoBehaviour
     }
     
     // getter for entry and exit door
-    public DoorData EntryDoor => new ()
+    public TeleporterPosition EntryDoor => new ()
     {
         x = _entryPosition.x, 
         y = _entryPosition.y,
         direction = -1
     };
     
-    public DoorData ExitDoor => new ()
+    public TeleporterPosition ExitDoor => new ()
     {
         x = _exitPosition.x, 
         y = _exitPosition.y,
