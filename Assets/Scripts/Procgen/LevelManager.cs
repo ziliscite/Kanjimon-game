@@ -11,11 +11,22 @@ using JetBrains.Annotations;
     public int tileId;
 }
 
-[Serializable] public class DoorData
+[Serializable] public class TeleporterPosition
 {
     public int x;
     public int y;
     public int direction; // 1 = down / exit, -1 = up / entry
+}
+
+[Serializable] public class PotionPosition {
+    public int x;
+    public int y;
+}
+
+[Serializable] public class EnemyPosition {
+    public int x;
+    public int y;
+    public int enemyId;
 }
 
 [Serializable] public class LevelData
@@ -24,8 +35,10 @@ using JetBrains.Annotations;
     public string playerId; // uuid
     public int level;
     public List<TileData> groundTiles;
-    public DoorData entryDoor;
-    public DoorData exitDoor;
+    public TeleporterPosition entryDoor;
+    public TeleporterPosition exitDoor;
+    public List<PotionPosition> potionPositions;
+    public List<EnemyPosition> enemyPositions;
 }
 
 public class LevelManager : MonoBehaviour
@@ -60,6 +73,12 @@ public class LevelManager : MonoBehaviour
             string filePath = GetFilePath(levelData.levelId);
             string directory = Path.GetDirectoryName(filePath);
             
+            if (string.IsNullOrEmpty(directory))
+            {
+                Debug.LogError($"[LevelManager] Invalid directory path for level {levelData.levelId}");
+                return;
+            }
+            
             Debug.Log($"[LevelManager] Saving level {levelData.levelId} to {filePath}");
             
             // Create directory if it doesn't exist
@@ -71,16 +90,31 @@ public class LevelManager : MonoBehaviour
             }
             
             string json = JsonUtility.ToJson(levelData, true);
-            Debug.Log($"[LevelManager] Serialized level data, size: {json.Length} characters");
-            
             File.WriteAllText(filePath, json);
             Debug.Log($"[LevelManager] Successfully saved level: {levelData.levelId} to {filePath}");
         }
         catch (Exception e)
         {
-            Debug.LogError($"[LevelManager] Failed to save level {levelData.levelId}: {e.Message}");
+            Debug.Log($"[LevelManager] Failed to save level {levelData.levelId}: {e.Message}");
             Debug.LogException(e);
         }
+    }
+
+    // load old level by id, modify potionData and monsterData, then save
+    public void SaveLevelObjects(string levelId, List<PotionPosition> potionData, List<EnemyPosition> monsterData)
+    {
+        LevelData levelData = LoadLevel(levelId);
+        if (levelData == null)
+        {
+            Debug.Log($"[LevelManager] Level {levelId} not found");
+            return;
+        }
+
+        levelData.potionPositions = potionData;
+        levelData.enemyPositions = monsterData;
+        
+        Debug.Log($"[LevelManager] Saving level {levelId} with {potionData.Count} potions and {monsterData.Count} monsters");
+        SaveLevel(levelData);
     }
     
     private LevelData LoadLevel(string levelId)
@@ -96,7 +130,7 @@ public class LevelManager : MonoBehaviour
 
             string json = File.ReadAllText(filePath);
             LevelData levelData = JsonUtility.FromJson<LevelData>(json);
-            Debug.Log($"[LevelManager] Loaded level {levelId}: tiles={levelData.groundTiles?.Count ?? 0}, entry=({levelData.entryDoor.x},{levelData.entryDoor.y}), exit=({levelData.exitDoor.x},{levelData.exitDoor.y})");
+            Debug.Log($"[LevelManager] Loaded level {levelId}: tiles={levelData.groundTiles?.Count ?? 0}, entry=({levelData.entryDoor.x},{levelData.entryDoor.y}), exit=({levelData.exitDoor.x},{levelData.exitDoor.y}), potions={levelData.potionPositions?.Count ?? 0}, monsters={levelData.enemyPositions?.Count ?? 0}");
             return levelData;
         }
         catch (Exception e)
