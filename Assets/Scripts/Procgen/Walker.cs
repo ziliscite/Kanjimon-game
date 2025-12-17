@@ -40,8 +40,8 @@ public class Walker : MonoBehaviour
     // reference to another class
     [SerializeField] private PlayerHandler playerHandler;
     [SerializeField] private TeleporterHandler teleporterHandler;
-    [SerializeField] private ObjectPlacer potionPlacer;
-    [SerializeField] private ObjectPlacer enemyPlacer;
+    [SerializeField] private PotionSpawner potionPlacer;
+    [SerializeField] private MonsterSpawner enemyPlacer;
     
     // Grid and walker management variable
     private bool[,] _visitedTiles; // keep track of visited tiles
@@ -59,20 +59,7 @@ public class Walker : MonoBehaviour
         // only regen if action is performed
         if (context.performed)
         {
-            CalculateGridBounds();
-            GenerateLevel();
-            
-            // replace the player
-            if (playerHandler != null)
-            {
-                // perform callback
-                playerHandler.RegeneratePlayer();
-            }
-
-            if (teleporterHandler != null)
-            {
-                teleporterHandler.GenerateDoor();
-            }
+            TriggerRegenerate();
         }
     }
 
@@ -228,10 +215,10 @@ public class Walker : MonoBehaviour
 
         switch (randomIndex)
         {
-            case 0: // 50% chance
+            case 0: // 55% chance
                 groundTilemap.SetTile(tilePos, groundTile);
                 break;
-            default: // 10% each
+            default: // 5% each
                 groundTilemap.SetTile(tilePos, groundTiles[randomIndex - 1]);
                 break;
         }
@@ -410,6 +397,16 @@ public class Walker : MonoBehaviour
         {
             teleporterHandler.LoadDoor(data.entryDoor, data.exitDoor);
         }
+        
+        if (enemyPlacer != null)
+        {
+            enemyPlacer.PlaceMonstersFromData(data.enemyPositions);
+        }
+        
+        if (potionPlacer != null)
+        {
+            potionPlacer.PlacePotionsFromData(data.potionPositions);
+        }
 
         if (playerHandler != null)
         {
@@ -429,15 +426,20 @@ public class Walker : MonoBehaviour
     private void TriggerRegenerate()
     {
         GenerateLevel();
+        Debug.Log($"[Walker] enemyPlacer null? {enemyPlacer == null}");
+        Debug.Log($"[Walker] potionPlacer null? {potionPlacer == null}");
+        Debug.Log($"[Walker] Trigger regeneration for level {currentLevel}");
         
-        // trigger potion placement for the first time
+        // trigger placements for the first time
         if (enemyPlacer != null)
         {
+            Debug.Log($"[Walker] Triggering enemy placement for level {currentLevel}");
             enemyPlacer.OnLevelGenerated();
         }
 
         if (potionPlacer != null)
         {
+            Debug.Log($"[Walker] Triggering potion placement for level {currentLevel}");
             potionPlacer.OnLevelGenerated();
         }
         
@@ -452,11 +454,26 @@ public class Walker : MonoBehaviour
         }
     }
     
+    private void SaveObjects()
+    {
+        Debug.Log($"[Walker] Saving objects for level {currentLevel}");
+        if (potionPlacer != null && enemyPlacer != null)
+        {
+            var potionData = potionPlacer.GetPotionData();
+            var monsterData = enemyPlacer.GetMonsterData();
+            
+            Debug.Log($"[Walker] Saving level {currentLevel} with {potionData.Count} potions and {monsterData.Count} monsters");
+            levelManager.SaveLevelObjects(levelManager.GetLevelId(playerId, currentLevel), potionData, monsterData);
+        }
+    }
+    
     public void TriggerLoad(int levelIncrement)
     {
         CalculateGridBounds();
         
-        // kasi kondisi
+        // Save the current level's objects before loading the next level
+        SaveObjects();
+        
         var level = currentLevel + levelIncrement;
         if (level < 1)
         {
