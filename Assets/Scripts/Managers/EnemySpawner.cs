@@ -6,14 +6,14 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private GameObject[] enemyList;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private PlayerData playerData;
+    public EnemyData SpawnedEnemy { get; private set; }
     public int currentEnemyID;
     public bool isEnemyBoss;
     public int enemyHealthSpawned;
     
     void Awake()
     {
-        playerData = FindFirstObjectByType<PlayerData>();
-        currentEnemyID = playerData.enemyBattledID;
+        currentEnemyID = PlayerManager.instance.enemyBattledID;
     }
     
     void Start()
@@ -23,24 +23,10 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy(int enemyID)
     {
-        switch (enemyID)
-        {
-            case 1:
-                Instantiate(enemyList[0], spawnPoint.position, Quaternion.identity);
-                break;
-            case 2:
-                Instantiate(enemyList[1], spawnPoint.position, Quaternion.identity);
-                break;
-            case 3:
-                Instantiate(enemyList[2], spawnPoint.position, Quaternion.identity);
-                break;
-            default:
-                Debug.LogError("Invalid enemy ID: " + enemyID);
-                break;
-        }
-        enemyHealthSpawned = enemyList[enemyID - 1].GetComponent<EnemyData>().enemyDataSO.hp;
-        isEnemyBoss = enemyList[enemyID - 1].GetComponent<EnemyData>().enemyDataSO.isBoss;
-        Debug.Log("Spawned Enemy ID: " + enemyID);
+        GameObject enemy = Instantiate(enemyList[enemyID - 1], spawnPoint.position, Quaternion.identity);
+        SpawnedEnemy = enemy.GetComponent<EnemyData>();
+        enemyHealthSpawned = SpawnedEnemy.enemyDataSO.hp;
+        isEnemyBoss = SpawnedEnemy.enemyDataSO.isBoss;
     }
 }
 

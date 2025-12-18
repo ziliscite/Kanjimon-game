@@ -1,9 +1,15 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class PlayerManager : MonoBehaviour
 {
-    public static GameManager instance;
-    public EnemyDataSO currentEnemy;
+    public static PlayerManager instance;
+    
+    [Header("Player Data")]
+    public int playerHP;
+    public int potionsLeft;
+
+    [Header("Enemy Data")]
+    public int enemyBattledID;
 
     void Awake()
     {
