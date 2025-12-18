@@ -3,7 +3,6 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager instance;
-    // public EnemyDataSO currentEnemy;
     
     [Header("Player Data")]
     public int playerHP;

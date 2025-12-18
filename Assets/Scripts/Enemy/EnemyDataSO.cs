@@ -7,7 +7,5 @@ public class EnemyDataSO : ScriptableObject
     public int enemyID;
     public string enemyName;
     public int hp;
-    public int attack;
-    public int exp; // buat exp ke player setelah kill
-    // public GameObject enemyPrefab;
+    public int attackPower;
 }

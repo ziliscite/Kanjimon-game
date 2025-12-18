@@ -111,7 +111,7 @@ public class BattleManager : MonoBehaviour
             Debug.Log("Ignored duplicate evaluation");
             return;
         }
-        
+
         Debug.Log($"[Battle] Action: {action}, Score: {score}");
         bool success = score > 10f; // threshold bebas
 
@@ -124,6 +124,7 @@ public class BattleManager : MonoBehaviour
 
                 if (enemyHealth <= 0)
                 {
+                    PlayerManager.instance.playerHP = playerHealth; // update data HP player ke global
                     state = BattleState.End;
                     StartCoroutine(ChangeScene());
                     return;
@@ -150,7 +151,9 @@ public class BattleManager : MonoBehaviour
     {
         state = BattleState.EnemyTurn;
 
-        int enemyDamage = 5;
+        // get enemy damage dari variasi tipe enemy
+        EnemyData enemy = enemySpawner.SpawnedEnemy.GetComponent<EnemyData>();
+        int enemyDamage = enemy.GetAttackDamage();
 
         int finalDamage = Mathf.Max(0, enemyDamage - playerShield);
 
