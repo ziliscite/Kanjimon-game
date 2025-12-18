@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
 using System.Collections;
 
 public enum BattleState
@@ -26,117 +25,112 @@ public class BattleManager : MonoBehaviour
     public BattleState state;
 
     [Header("References")]
+    [SerializeField] private Animator playerAnimator;
     [SerializeField] private EnemySpawner enemySpawner;
     [SerializeField] private LargeLanguageService llm;
     [SerializeField] private QuestionManager questionManager;
     [SerializeField] private PopupUI popUpUI;
-    // [SerializeField] private TMP_Text explanationText;
-    // [SerializeField] private GameObject boxExplain;
-
+    [SerializeField] private GameObject slashVFX;
+    [SerializeField] private Transform spawnPoint;
+    [SerializeField] private PotionGetter potionGetter;
     
     [Header("UI References")]
-    [SerializeField] private GameObject UIButtons;
-    [SerializeField] private GameObject UIBattle;
+    [SerializeField] private GameObject UIButtons; // Attack, Defend, Potion buttons
+    [SerializeField] private GameObject UIBattle;  // The typing input area
     [SerializeField] private Slider playerHealthSlider;
     [SerializeField] private Slider enemyHealthSlider;
     [SerializeField] private Slider playerShieldSlider;
+    [SerializeField] private Button potionButton;
 
-    [Header("Delay")]
-    [SerializeField] private float postEvaluationDelay = 5f;
+    [Header("Delays")]
+    [SerializeField] private float postEvaluationDelay = 2f; 
 
     IEnumerator Start()
     {
-        // tunggu sampe enemy beneran ada
+        if (PlayerManager.Instance.potionsLeft <= 0) {
+            potionButton.interactable = false;
+        }
+
+        UIButtons.SetActive(false);
+        UIBattle.SetActive(false);
+
         while (enemySpawner.SpawnedEnemy == null)
             yield return null;
 
         playerHealth = PlayerManager.Instance.playerHP;
-
         enemyHealth = enemySpawner.enemyHealthSpawned;
         enemyHealthSlider = enemySpawner.SpawnedEnemy.healthSlider;
-
         playerShield = 0;
 
         playerHealthSlider.maxValue = playerHealth;
         playerHealthSlider.value = playerHealth;
-
         enemyHealthSlider.maxValue = enemyHealth;
         enemyHealthSlider.value = enemyHealth;
-
         playerShieldSlider.maxValue = 100;
         playerShieldSlider.value = 0;
 
         state = BattleState.PlayerTurn;
-        popUpUI.ShowYourTurn();
+
+        popUpUI.ShowYourTurn(() => {
+            UIButtons.SetActive(true); 
+        });
     }
 
-    public void PlayerAttack()
-    {
-        if (state != BattleState.PlayerTurn) return;
-
-        state = BattleState.WaitingLLM;
-
-        questionManager.ResetReviewUI();
-        questionManager.AskQuestionForAction("attack");
-
-        UIButtons.SetActive(false);
-        UIBattle.SetActive(true);
+    public void PlayerAttack() { 
+        if(state == BattleState.PlayerTurn) { 
+            state = BattleState.WaitingLLM; 
+            questionManager.ResetReviewUI(); 
+            questionManager.AskQuestionForAction("attack"); 
+            UIButtons.SetActive(false); 
+            UIBattle.SetActive(true); 
+        } 
     }
 
-    public void PlayerDefend()
-    {
+    public void PlayerDefend() { 
+        if(state == BattleState.PlayerTurn) { 
+            state = BattleState.WaitingLLM; 
+            questionManager.ResetReviewUI(); 
+            questionManager.AskQuestionForAction("defend"); 
+            UIButtons.SetActive(false); 
+            UIBattle.SetActive(true); 
+        } 
+    }
+
+    public void PlayerUsePotion() {
+        
         if (state != BattleState.PlayerTurn) return;
+        if (PlayerManager.Instance.potionsLeft <= 0) return;
 
-        state = BattleState.WaitingLLM;
-
-        questionManager.ResetReviewUI();
-        questionManager.AskQuestionForAction("defend");
+        playerHealth = Mathf.Clamp(playerHealth + 40, 0, 100);
+        PlayerManager.Instance.potionsLeft -= 1;
+        potionGetter.RefreshPotionUI();
+        UpdatePlayerHPBar();
         
         UIButtons.SetActive(false);
-        UIBattle.SetActive(true);
-    }
-
-    public void PlayerUsePotion()
-    {
-        if (state != BattleState.PlayerTurn) return;
-
-        playerHealth += 40;
-    
-        questionManager.ResetReviewUI();
-        UIButtons.SetActive(false);
-        UIBattle.SetActive(true);
-
         EnemyTurn();
     }
 
     public void OnActionEvaluated(string action, float score)
     {
-        if (state != BattleState.WaitingLLM)
-        {
-            Debug.Log("Ignored duplicate evaluation");
-            return;
-        }
+        if (state != BattleState.WaitingLLM) return;
 
-        Debug.Log($"[Battle] Action: {action}, Score: {score}");
-        bool success = score > 10f; // threshold bebas
-
+        bool success = score > 10f;
         if (success)
         {
             if (action == "attack")
             {
                 enemyHealth -= Mathf.RoundToInt(score);
+                Instantiate(slashVFX, spawnPoint.transform.position, Quaternion.identity);
                 UpdateEnemyHPBar();
+
+                if (playerAnimator != null)
+                {
+                    playerAnimator.SetTrigger("AttackTrigger");
+                }
 
                 if (enemyHealth <= 0)
                 {
-                    if (enemySpawner.isEnemyBoss)
-                    {
-                        BossManager.Instance.SetBossDead(true);
-                    }
-                    
-                    PlayerManager.Instance.playerHP = playerHealth; // update data HP player ke global
-                    state = BattleState.End;
-                    StartCoroutine(ChangeScene());
+                    HandleEnemyDeath();
                     return;
                 }
             }
@@ -147,8 +141,16 @@ public class BattleManager : MonoBehaviour
                 UpdateShieldBar();
             }
         }
-
+        
         StartCoroutine(DelayedEnemyTurn());
+    }
+
+    private void HandleEnemyDeath()
+    {
+        if (enemySpawner.isEnemyBoss) BossManager.Instance.SetBossDead(true);
+        PlayerManager.Instance.playerHP = playerHealth;
+        state = BattleState.End;
+        StartCoroutine(ChangeScene());
     }
 
     private IEnumerator DelayedEnemyTurn()
@@ -165,14 +167,22 @@ public class BattleManager : MonoBehaviour
     private IEnumerator EnemyTurnRoutine()
     {
         state = BattleState.EnemyTurn;
-        popUpUI.ShowEnemyTurn();
 
-        // BIAR POPUP KEBACA
-        yield return new WaitForSeconds(1.2f);
+        UIBattle.SetActive(false);
+        UIButtons.SetActive(false);
+        questionManager.ResetReviewUI(); 
+        // ------------------------
+
+        bool animComplete = false;
+        popUpUI.ShowEnemyTurn(() => { 
+            animComplete = true; 
+        });
+
+        while(!animComplete) yield return null;
+
 
         EnemyData enemy = enemySpawner.SpawnedEnemy.GetComponent<EnemyData>();
         int enemyDamage = enemy.GetAttackDamage();
-
         int finalDamage = Mathf.Max(0, enemyDamage - playerShield);
 
         playerHealth -= finalDamage;
@@ -185,47 +195,30 @@ public class BattleManager : MonoBehaviour
             yield break;
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.5f); // Small impact pause
 
         state = BattleState.PlayerTurn;
-        popUpUI.ShowYourTurn();
 
-        UIBattle.SetActive(false);
-        UIButtons.SetActive(true);
+        popUpUI.ShowYourTurn(() => {
+            UIButtons.SetActive(true);
+        });
+    }
+    
+    private void UpdatePlayerHPBar() { 
+        if (playerHPCoroutine != null) StopCoroutine(playerHPCoroutine);
+        playerHPCoroutine = StartCoroutine(AnimateSlider(playerHealthSlider, playerHealth));
+    }
+    
+    private void UpdateEnemyHPBar() {
+        if (enemyHPCoroutine != null) StopCoroutine(enemyHPCoroutine);
+        enemyHPCoroutine = StartCoroutine(AnimateSlider(enemyHealthSlider, enemyHealth));
     }
 
-    private void UpdatePlayerHPBar()
-    {
-        if (playerHPCoroutine != null)
-            StopCoroutine(playerHPCoroutine);
-
-        playerHPCoroutine = StartCoroutine(
-            AnimateSlider(playerHealthSlider, playerHealth)
-        );
+    private void UpdateShieldBar() {
+        if (shieldCoroutine != null) StopCoroutine(shieldCoroutine);
+        shieldCoroutine = StartCoroutine(AnimateSlider(playerShieldSlider, playerShield, 8f));
     }
 
-    private void UpdateEnemyHPBar()
-    {
-        if (enemyHPCoroutine != null)
-            StopCoroutine(enemyHPCoroutine);
-
-        enemyHPCoroutine = StartCoroutine(
-            AnimateSlider(enemyHealthSlider, enemyHealth)
-        );
-    }
-
-    private void UpdateShieldBar()
-    {
-        if (shieldCoroutine != null)
-            StopCoroutine(shieldCoroutine);
-
-        shieldCoroutine = StartCoroutine(
-            AnimateSlider(playerShieldSlider, playerShield, 8f)
-        );
-    }
-
-
-    // Animasi bars
     private IEnumerator AnimateSlider(Slider slider, float target, float speed = 5f)
     {
         while (Mathf.Abs(slider.value - target) > 0.1f)
@@ -233,18 +226,14 @@ public class BattleManager : MonoBehaviour
             slider.value = Mathf.Lerp(slider.value, target, speed * Time.deltaTime);
             yield return null;
         }
-
         slider.value = target;
     }
 
     public void CancelActionAndReturnToPlayer()
     {
-        Debug.Log("Cancelling action and returning to player's turn");
         state = BattleState.PlayerTurn;
-
-        popUpUI.ShowYourTurn();
         UIBattle.SetActive(false);
-        UIButtons.SetActive(true);
+        popUpUI.ShowYourTurn(() => { UIButtons.SetActive(true); });
     }
 
     private IEnumerator ChangeScene()

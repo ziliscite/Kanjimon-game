@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 6010554407873798603}
   - component: {fileID: 5058451300828375568}
   - component: {fileID: 9163751029320137807}
-  - component: {fileID: 4711482536469861427}
   m_Layer: 0
   m_Name: PlayerRoaming
   m_TagString: Player
@@ -262,7 +261,7 @@ MonoBehaviour:
   charX: 0
   charY: 0
   attackBox: {fileID: 4354731991505424946}
-  boxOffset: 1
+  boxOffset: 0.5
 --- !u!95 &6010554407873798603
 Animator:
   serializedVersion: 7
@@ -344,24 +343,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   enemyCheckerBox: {fileID: 6658830969769633560}
+  slashVFX: {fileID: 5078639693448272812, guid: 17eb876977457994797eaa9f37fdc849, type: 3}
   enemyOnSight: {fileID: 0}
   targetEnemyID: 0
---- !u!114 &4711482536469861427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4048857156291038768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 117fed52bf7389743958f027829e1624, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerData
-  playerHealth: 100
-  enemyBattledID: 0
-  enemyCheckerBox: {fileID: 0}
-  playerAttack: {fileID: 0}
 --- !u!1 &4354731991505424946
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,7 +423,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
 --- !u!114 &6658830969769633560
 MonoBehaviour:
