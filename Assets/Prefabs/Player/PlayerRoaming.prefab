@@ -16,8 +16,6 @@ GameObject:
   - component: {fileID: 6010554407873798603}
   - component: {fileID: 5058451300828375568}
   - component: {fileID: 9163751029320137807}
-  - component: {fileID: 868039627054519896}
-  - component: {fileID: 4328168377735153323}
   m_Layer: 0
   m_Name: PlayerRoaming
   m_TagString: Player
@@ -337,37 +335,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   enemyCheckerBox: {fileID: 6658830969769633560}
-  playerData: {fileID: 868039627054519896}
   enemyOnSight: {fileID: 0}
   targetEnemyID: 0
---- !u!114 &868039627054519896
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4048857156291038768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 117fed52bf7389743958f027829e1624, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerData
-  playerHealth: 100
-  enemyBattledID: 0
-  enemyCheckerBox: {fileID: 0}
-  playerAttack: {fileID: 0}
---- !u!114 &4328168377735153323
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4048857156291038768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9fa210446b4723e47ae7bccb990248ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInstance
 --- !u!1 &4354731991505424946
 GameObject:
   m_ObjectHideFlags: 0

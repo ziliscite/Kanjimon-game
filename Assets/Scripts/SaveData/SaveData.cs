@@ -14,5 +14,4 @@ public class SaveData
     public int lastFloor;
     public int enemyBattledID;
     public string sceneName;
-
 }

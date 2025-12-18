@@ -29,6 +29,10 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private EnemySpawner enemySpawner;
     [SerializeField] private LargeLanguageService llm;
     [SerializeField] private QuestionManager questionManager;
+    [SerializeField] private PopupUI popUpUI;
+    // [SerializeField] private TMP_Text explanationText;
+    // [SerializeField] private GameObject boxExplain;
+
     
     [Header("UI References")]
     [SerializeField] private GameObject UIButtons;
@@ -63,6 +67,7 @@ public class BattleManager : MonoBehaviour
         playerShieldSlider.value = 0;
 
         state = BattleState.PlayerTurn;
+        popUpUI.ShowYourTurn();
     }
 
     public void PlayerAttack()
@@ -149,9 +154,17 @@ public class BattleManager : MonoBehaviour
 
     private void EnemyTurn()
     {
-        state = BattleState.EnemyTurn;
+        StartCoroutine(EnemyTurnRoutine());
+    }
 
-        // get enemy damage dari variasi tipe enemy
+    private IEnumerator EnemyTurnRoutine()
+    {
+        state = BattleState.EnemyTurn;
+        popUpUI.ShowEnemyTurn();
+
+        // BIAR POPUP KEBACA
+        yield return new WaitForSeconds(1.2f);
+
         EnemyData enemy = enemySpawner.SpawnedEnemy.GetComponent<EnemyData>();
         int enemyDamage = enemy.GetAttackDamage();
 
@@ -160,16 +173,17 @@ public class BattleManager : MonoBehaviour
         playerHealth -= finalDamage;
         UpdatePlayerHPBar();
 
-        Debug.Log("Enemy attacks! Player HP: " + playerHealth);
-
         if (playerHealth <= 0)
         {
             state = BattleState.End;
             StartCoroutine(ChangeScene());
-            return;
+            yield break;
         }
 
+        yield return new WaitForSeconds(0.5f);
+
         state = BattleState.PlayerTurn;
+        popUpUI.ShowYourTurn();
 
         UIBattle.SetActive(false);
         UIButtons.SetActive(true);
@@ -223,13 +237,14 @@ public class BattleManager : MonoBehaviour
         Debug.Log("Cancelling action and returning to player's turn");
         state = BattleState.PlayerTurn;
 
+        popUpUI.ShowYourTurn();
         UIBattle.SetActive(false);
         UIButtons.SetActive(true);
     }
 
     private IEnumerator ChangeScene()
     {
-        ScreenFader.Instance.FadeToScene("Test");
+        ScreenFader.Instance.FadeToScene("ProcgenScene");
         yield return new WaitForSeconds(1f);
     }
 }
