@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4090967409427461899}
   - component: {fileID: -163950188388334977}
   - component: {fileID: 5976340315353565309}
-  - component: {fileID: 6447250364847222727}
   - component: {fileID: 7914019868147331012}
   - component: {fileID: 6541465115029534869}
   m_Layer: 0
@@ -162,18 +161,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.3, y: 0.3}
   m_EdgeRadius: 0
---- !u!114 &6447250364847222727
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4268597424691880558}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6692b582e987cf04ab0904ca91041ef2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TriggerBattle
 --- !u!212 &7914019868147331012
 SpriteRenderer:
   m_ObjectHideFlags: 0

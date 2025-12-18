@@ -8,16 +8,20 @@ public class QuestionManager : MonoBehaviour
     [SerializeField] private LargeLanguageService llm;
     [SerializeField] private TMP_Text questionText; 
     [SerializeField] private TMP_InputField answerField;
+    [SerializeField] private BattleManager battleManager;
+    [SerializeField] private TMP_Text resultText;
+    [SerializeField] private TMP_Text explanationText;
+    [SerializeField] private Button submitButton;
 
-    [SerializeField] private float enemyHP;
-    [SerializeField] private float playerHP;
+
+    private string pendingAction; // "attack" / "defend"
 
     private string currentJapanese;
     
     void Start()
     {
-        enemyHP = GameManager.instance.currentEnemy.hp;
-        playerHP = 100; // eksampel
+        // enemyHP = GameManager.instance.currentEnemy.hp;
+        // playerHP = 100; // eksampel
         GenerateQuestion();
     }
     
@@ -36,6 +40,12 @@ public class QuestionManager : MonoBehaviour
         return "N1"; // Dungeon 10 final boss
     }
     
+    public void AskQuestionForAction(string action)
+    {
+        pendingAction = action;
+        GenerateQuestion();
+    }
+
     void GenerateQuestion()
     {
         // ini nanti kategori sesuai enemy type, dimap tuh ke question type
@@ -45,35 +55,68 @@ public class QuestionManager : MonoBehaviour
 
     public void OnSubmit()
     {
+        answerField.interactable = false;
+        submitButton.interactable = false;
+
         var request = new SubmitQuestionRequest
         {
             question = currentJapanese,
             answer = answerField.text
         };
 
+        answerField.text = "";
+
         llm.SubmitQuestion(request, OnEvaluateSuccess, OnEvaluateError);
     }
 
     private void OnEvaluateSuccess(LargeLanguageResponse resp)
     {
-        Debug.Log("Score: " + resp.score);
+        // tampilkan hasil
+        resultText.text =
+            $"Score: {resp.score:0}\n";
+            // $"Jawaban benar:\n{resp.correctAnswer}";
 
-        if (resp.score >= 80f)
-        {
-            enemyHP -= resp.score;
-        }
-        else
-        {
-            playerHP -= (100f - resp.score);
-        }
+        explanationText.text = resp.explanation;
+        Debug.Log (resp.explanation);
 
-        // clear input & next word
-        answerField.text = "";
+        // kasih ke battlemanager
+        battleManager.OnActionEvaluated(pendingAction, resp.score);
+
+        // ubah UI jadi mode "review"
+        submitButton.GetComponentInChildren<TMP_Text>().text = "Lanjut";
+        submitButton.onClick.RemoveAllListeners();
+        submitButton.onClick.AddListener(NextQuestion);
+
+        pendingAction = null;
+    }
+
+    // lanjut setelah aksi
+    private void NextQuestion()
+    {
+        submitButton.GetComponentInChildren<TMP_Text>().text = "Submit";
+        submitButton.onClick.RemoveAllListeners();
+        submitButton.onClick.AddListener(OnSubmit);
+        submitButton.interactable = true;
+
         GenerateQuestion();
     }
 
     private void OnEvaluateError(string message)
     {
         Debug.LogError(message);
+    }
+
+    // buat ngosongin UI
+    public void ResetReviewUI()
+    {
+        resultText.text = "";
+        explanationText.text = "";
+        answerField.text = "";
+        answerField.interactable = true;
+
+        submitButton.GetComponentInChildren<TMP_Text>().text = "Submit";
+        submitButton.onClick.RemoveAllListeners();
+        submitButton.onClick.AddListener(OnSubmit);
+        submitButton.interactable = true;
     }
 }

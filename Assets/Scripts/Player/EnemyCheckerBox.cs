@@ -1,7 +1,8 @@
 using UnityEngine;
 
-public class EnemyChecker : MonoBehaviour
+public class EnemyCheckerBox : MonoBehaviour
 {
+    [SerializeField] private PlayerAttack playerAttack;
     public bool enemyInsideRange;
     public GameObject targetEnemy;
 
@@ -9,9 +10,9 @@ public class EnemyChecker : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            Debug.Log("Bahlil detected");
             enemyInsideRange = true;
             targetEnemy = other.gameObject;
+            playerAttack.enemyOnSight = targetEnemy; // set enemy in PlayerAttack
         }
     }
 
@@ -21,6 +22,7 @@ public class EnemyChecker : MonoBehaviour
         {
             enemyInsideRange = false;
             targetEnemy = null;
+            playerAttack.enemyOnSight = null; // reset enemy in PlayerAttack
         }
     }
 }
