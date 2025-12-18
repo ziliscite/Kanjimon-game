@@ -63,6 +63,7 @@ public class TeleporterTrigger : MonoBehaviour
             {
                 Debug.Log($"[{gameObject.name}] TELEPORTING");
                 _walker.TriggerLoad(_direction);
+                SoundManager.Instance.PlaySFX("TeleportSound");
             }
         }
     }

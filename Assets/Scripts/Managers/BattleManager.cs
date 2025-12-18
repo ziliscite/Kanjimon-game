@@ -121,6 +121,7 @@ public class BattleManager : MonoBehaviour
             {
                 enemyHealth -= Mathf.RoundToInt(score);
                 Instantiate(slashVFX, spawnPoint.transform.position, Quaternion.identity);
+                SoundManager.Instance.PlaySFXRandomPitch("SlashSound");
                 UpdateEnemyHPBar();
 
                 if (playerAnimator != null)

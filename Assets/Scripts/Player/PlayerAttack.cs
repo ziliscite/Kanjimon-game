@@ -22,6 +22,7 @@ public class PlayerAttack : MonoBehaviour
         {
             Vector3 centerPos = enemyCheckerBox.transform.position;
             Instantiate(slashVFX, centerPos, Quaternion.identity);
+            SoundManager.Instance.PlaySFXRandomPitch("SlashSound");
 
             var enemyData = enemyOnSight.GetComponent<EnemyData>().enemyDataSO;
             PlayerManager.Instance.enemyBattledID = enemyData.enemyID;
