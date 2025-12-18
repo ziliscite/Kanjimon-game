@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class QuestionManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class QuestionManager : MonoBehaviour
     [SerializeField] private BattleManager battleManager;
     [SerializeField] private TMP_Text resultText;
     [SerializeField] private TMP_Text explanationText;
+    [SerializeField] private GameObject boxExplain;
     [SerializeField] private Button submitButton;
 
 
@@ -77,23 +79,24 @@ public class QuestionManager : MonoBehaviour
     {
         isEvaluating = false;
 
-        // tampilkan hasil
-        resultText.text =
-            $"Score: {resp.score:0}\n";
-            // $"Jawaban benar:\n{resp.correctAnswer}";
-
+        resultText.text = $"Score: {resp.score:0}";
+        
+        boxExplain.SetActive(true);
         explanationText.text = resp.explanation;
-        Debug.Log (resp.explanation);
 
-        // kasih ke battlemanager
+        // input OFF saat review
+        answerField.interactable = false;
+
         battleManager.OnActionEvaluated(pendingAction, resp.score);
 
-        // ubah UI jadi mode "review"
         submitButton.GetComponentInChildren<TMP_Text>().text = "Lanjut";
         submitButton.onClick.RemoveAllListeners();
         submitButton.onClick.AddListener(NextQuestion);
 
         pendingAction = null;
+
+        // auto-hide boxExplain setelah 3detik
+        StartCoroutine(HideExplanationAfterSeconds(3f));
     }
 
     private void OnEvaluateError(string message)
@@ -114,10 +117,14 @@ public class QuestionManager : MonoBehaviour
     // lanjut setelah aksi
     private void NextQuestion()
     {
+        boxExplain.SetActive(false);
+
         submitButton.GetComponentInChildren<TMP_Text>().text = "Submit";
         submitButton.onClick.RemoveAllListeners();
         submitButton.onClick.AddListener(OnSubmit);
         submitButton.interactable = true;
+
+        answerField.interactable = true;
 
         GenerateQuestion();
     }
@@ -125,8 +132,12 @@ public class QuestionManager : MonoBehaviour
     // buat ngosongin UI
     public void ResetReviewUI()
     {
+        Debug.Log("Resetting Review UI");
         resultText.text = "";
         explanationText.text = "";
+
+        boxExplain.SetActive(false);
+
         answerField.text = "";
         answerField.interactable = true;
 
@@ -134,5 +145,11 @@ public class QuestionManager : MonoBehaviour
         submitButton.onClick.RemoveAllListeners();
         submitButton.onClick.AddListener(OnSubmit);
         submitButton.interactable = true;
+    }
+
+    private IEnumerator HideExplanationAfterSeconds(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        boxExplain.SetActive(false);
     }
 }
