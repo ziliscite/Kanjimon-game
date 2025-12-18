@@ -19,6 +19,9 @@ public class BattleManager : MonoBehaviour
     public int enemyHealth;
     public int playerShield;
 
+    private Coroutine playerHPCoroutine;
+    private Coroutine enemyHPCoroutine;
+    private Coroutine shieldCoroutine;
     
     public BattleState state;
 
@@ -39,7 +42,7 @@ public class BattleManager : MonoBehaviour
 
     void Start()
     {
-        playerHealth = FindFirstObjectByType<PlayerData>().playerHealth;
+        playerHealth = PlayerManager.instance.playerHP;
         enemyHealth = enemySpawner.enemyHealthSpawned;
         enemyHealthSlider = FindFirstObjectByType<EnemyData>().healthSlider;
 
@@ -86,7 +89,7 @@ public class BattleManager : MonoBehaviour
     {
         if (state != BattleState.PlayerTurn) return;
 
-        playerHealth += 20; // sementara 10 hp, nanti bisa diganti
+        playerHealth += 40;
     
         questionManager.ResetReviewUI();
         UIButtons.SetActive(false);
@@ -94,23 +97,6 @@ public class BattleManager : MonoBehaviour
 
         EnemyTurn();
     }
-
-    // callback kalau LLM berhasil
-    // private void OnLLMSuccess(LargeLanguageResponse response)
-    // {
-    //     Debug.Log("LLM Score: " + response.score);
-    //     Debug.Log("LLM Says: " + response.explanation);
-
-    //     // setelah dapet jawaban → musuh nyerang
-    //     EnemyTurn();
-    // }
-
-    // private void OnLLMError(string msg)
-    // {
-    //     Debug.LogError("LLM ERROR: " + msg);
-    //     // fallback: tetap lanjut musuh
-    //     EnemyTurn();
-    // }
 
     public void OnActionEvaluated(string action, float score)
     {
@@ -133,7 +119,7 @@ public class BattleManager : MonoBehaviour
             playerShield += shieldGain;
 
             playerShield = Mathf.Clamp(playerShield, 0, 100);
-            UpdateShieldValue();
+            UpdateShieldBar();
         }
 
         // delay sebelum turn musuh (buat proses jawaban dulu)
@@ -176,26 +162,59 @@ public class BattleManager : MonoBehaviour
 
     private void UpdatePlayerHPBar()
     {
-        playerHealthSlider.value = playerHealth;
-        Debug.Log("Updating Player HP Bar: " + playerHealth);
+        if (playerHPCoroutine != null)
+            StopCoroutine(playerHPCoroutine);
+
+        playerHPCoroutine = StartCoroutine(
+            AnimateSlider(playerHealthSlider, playerHealth)
+        );
     }
 
     private void UpdateEnemyHPBar()
     {
-        enemyHealthSlider.value = enemyHealth;
-        Debug.Log("Updating Enemy HP Bar: " + enemyHealth);
+        if (enemyHPCoroutine != null)
+            StopCoroutine(enemyHPCoroutine);
+
+        enemyHPCoroutine = StartCoroutine(
+            AnimateSlider(enemyHealthSlider, enemyHealth)
+        );
     }
 
-    private void UpdateShieldValue()
+    private void UpdateShieldBar()
     {
-        playerShieldSlider.value = playerShield;
-        Debug.Log("Updating Player Shield: " + playerShield);
+        if (shieldCoroutine != null)
+            StopCoroutine(shieldCoroutine);
+
+        shieldCoroutine = StartCoroutine(
+            AnimateSlider(playerShieldSlider, playerShield, 8f)
+        );
+    }
+
+
+    // Animasi bars
+    private IEnumerator AnimateSlider(Slider slider, float target, float speed = 5f)
+    {
+        while (Mathf.Abs(slider.value - target) > 0.1f)
+        {
+            slider.value = Mathf.Lerp(slider.value, target, speed * Time.deltaTime);
+            yield return null;
+        }
+
+        slider.value = target;
+    }
+
+    public void CancelActionAndReturnToPlayer()
+    {
+        Debug.Log("Cancelling action and returning to player's turn");
+        state = BattleState.PlayerTurn;
+
+        UIBattle.SetActive(false);
+        UIButtons.SetActive(true);
     }
 
     private IEnumerator ChangeScene()
     {
         ScreenFader.Instance.FadeToScene("Test");
         yield return new WaitForSeconds(1f);
-        PlayerInstance.instance.Disabler();
     }
 }

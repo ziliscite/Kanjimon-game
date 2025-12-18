@@ -5,14 +5,12 @@ public class EnemySpawner : MonoBehaviour
     [Header ("References")]
     [SerializeField] private GameObject[] enemyList;
     [SerializeField] private Transform spawnPoint;
-    [SerializeField] private PlayerData playerData;
     public int currentEnemyID;
     public int enemyHealthSpawned;
-    
+
     void Awake()
     {
-        playerData = FindFirstObjectByType<PlayerData>();
-        currentEnemyID = playerData.enemyBattledID;
+        currentEnemyID = PlayerManager.instance.enemyBattledID;
     }
     
     void Start()

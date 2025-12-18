@@ -10,7 +10,6 @@ public class PlayerMovement : MonoBehaviour
   private Rigidbody2D rb;
   [SerializeField] private Vector2 movement;
   private Animator animator;
-  public GameObject character;
   public Transform coord;
   public float charX;
   public float charY;
@@ -23,11 +22,6 @@ public class PlayerMovement : MonoBehaviour
   {
     rb = GetComponent<Rigidbody2D>();
     animator = GetComponent<Animator>();
-  }
-
-  void Awake()
-  {
-    character = this.gameObject;
   }
 
   void Update()

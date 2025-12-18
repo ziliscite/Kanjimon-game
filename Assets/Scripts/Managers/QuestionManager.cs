@@ -103,7 +103,15 @@ public class QuestionManager : MonoBehaviour
 
     private void OnEvaluateError(string message)
     {
+        explanationText.text = message;
         Debug.LogError(message);
+
+        ResetReviewUI();
+
+        // balikin turn ke player
+        battleManager.CancelActionAndReturnToPlayer();
+
+        pendingAction = null;
     }
 
     // buat ngosongin UI

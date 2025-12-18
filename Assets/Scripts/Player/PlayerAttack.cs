@@ -6,7 +6,6 @@ using System.Collections;
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private EnemyCheckerBox enemyCheckerBox;
-    [SerializeField] private PlayerData playerData;
     public GameObject enemyOnSight; 
     public int targetEnemyID;
     
@@ -20,8 +19,8 @@ public class PlayerAttack : MonoBehaviour
     {
         if (enemyCheckerBox != null && enemyCheckerBox.enemyInsideRange)
         {
-            targetEnemyID = enemyOnSight.GetComponent<EnemyData>().enemyDataSO.enemyID;
-            playerData.enemyBattledID = targetEnemyID;
+            var enemyData = enemyOnSight.GetComponent<EnemyData>().enemyDataSO;
+            PlayerManager.instance.enemyBattledID = enemyData.enemyID;
 
             StartCoroutine(ChangeScene());
         }
@@ -31,6 +30,5 @@ public class PlayerAttack : MonoBehaviour
     {
         ScreenFader.Instance.FadeToScene("Battle Scene");
         yield return new WaitForSeconds(1f);
-        PlayerInstance.instance.Disabler();
     }
 }
