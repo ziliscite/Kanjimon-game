@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -12,9 +13,7 @@ public class PlayerAttack : MonoBehaviour
     public void OnAttack(InputAction.CallbackContext context)
     {
         if (context.performed)
-        {
             AttackAction();
-        }
     }
 
     private void AttackAction()
@@ -24,8 +23,14 @@ public class PlayerAttack : MonoBehaviour
             targetEnemyID = enemyOnSight.GetComponent<EnemyData>().enemyDataSO.enemyID;
             playerData.enemyBattledID = targetEnemyID;
 
-            SceneManager.LoadScene("Battle Scene");
-            PlayerInstance.instance.Disabler();
+            StartCoroutine(ChangeScene());
         }
+    }
+
+    private IEnumerator ChangeScene()
+    {
+        ScreenFader.Instance.FadeToScene("Battle Scene");
+        yield return new WaitForSeconds(1f);
+        PlayerInstance.instance.Disabler();
     }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public enum BattleState
 {
@@ -16,7 +17,8 @@ public class BattleManager : MonoBehaviour
     [Header("Battle Data")]
     public int playerHealth;
     public int enemyHealth;
-    public int defenseValue;
+    public int playerShield;
+
     
     public BattleState state;
 
@@ -30,14 +32,20 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private GameObject UIBattle;
     [SerializeField] private Slider playerHealthSlider;
     [SerializeField] private Slider enemyHealthSlider;
-    [SerializeField] private TMP_Text DefenseValueText;
+    [SerializeField] private Slider playerShieldSlider;
 
+    [Header("Delay")]
+    [SerializeField] private float postEvaluationDelay = 5f;
 
     void Start()
     {
         playerHealth = FindFirstObjectByType<PlayerData>().playerHealth;
         enemyHealth = enemySpawner.enemyHealthSpawned;
         enemyHealthSlider = FindFirstObjectByType<EnemyData>().healthSlider;
+
+        playerShield = 0;
+        playerShieldSlider.maxValue = 100;
+        playerShieldSlider.value = playerShield;
 
         playerHealthSlider.maxValue = playerHealth;
         playerHealthSlider.value = playerHealth;
@@ -54,6 +62,7 @@ public class BattleManager : MonoBehaviour
 
         state = BattleState.WaitingLLM;
 
+        questionManager.ResetReviewUI();
         questionManager.AskQuestionForAction("attack");
 
         UIButtons.SetActive(false);
@@ -66,6 +75,7 @@ public class BattleManager : MonoBehaviour
 
         state = BattleState.WaitingLLM;
 
+        questionManager.ResetReviewUI();
         questionManager.AskQuestionForAction("defend");
         
         UIButtons.SetActive(false);
@@ -77,7 +87,8 @@ public class BattleManager : MonoBehaviour
         if (state != BattleState.PlayerTurn) return;
 
         playerHealth += 20; // sementara 10 hp, nanti bisa diganti
-        
+    
+        questionManager.ResetReviewUI();
         UIButtons.SetActive(false);
         UIBattle.SetActive(true);
 
@@ -101,36 +112,6 @@ public class BattleManager : MonoBehaviour
     //     EnemyTurn();
     // }
 
-    private void EnemyTurn()
-    {
-        state = BattleState.EnemyTurn;
-
-        int enemyDamage = 5;
-
-        int finalDamage = Mathf.Max(0, enemyDamage - defenseValue);
-        defenseValue = 0;
-
-        playerHealth -= finalDamage;
-        UpdatePlayerHPBar();
-
-        Debug.Log("Enemy attacks! Player HP: " + playerHealth);
-
-        if (playerHealth <= 0)
-        {
-            state = BattleState.End;
-            Debug.Log("Player kalah.");
-            SceneManager.LoadScene("Test");
-            PlayerInstance.instance.Enabler(); // INI SEMENTARA BUAT PRESENTASI WKEWKEWKE
-            return;
-        }
-
-        state = BattleState.PlayerTurn;
-        Debug.Log("Player turn again.");
-
-        UIBattle.SetActive(false);
-        UIButtons.SetActive(true);
-    }
-
     public void OnActionEvaluated(string action, float score)
     {
         if (action == "attack")
@@ -142,18 +123,55 @@ public class BattleManager : MonoBehaviour
             if (enemyHealth <= 0)
             {
                 state = BattleState.End;
-                Debug.Log("Enemy defeated!");
-                SceneManager.LoadScene("Test");
-                PlayerInstance.instance.Enabler();
+                StartCoroutine(ChangeScene());
                 return;
             }
         }
         else if (action == "defend")
         {
-            defenseValue += Mathf.RoundToInt(score);
+            int shieldGain = Mathf.RoundToInt(score);
+            playerShield += shieldGain;
+
+            playerShield = Mathf.Clamp(playerShield, 0, 100);
+            UpdateShieldValue();
         }
 
+        // delay sebelum turn musuh (buat proses jawaban dulu)
+        StartCoroutine(DelayedEnemyTurn());
+    }
+
+    private IEnumerator DelayedEnemyTurn()
+    {
+        yield return new WaitForSeconds(postEvaluationDelay);
         EnemyTurn();
+    }
+
+    private void EnemyTurn()
+    {
+        state = BattleState.EnemyTurn;
+
+        int enemyDamage = 5;
+
+        int finalDamage = Mathf.Max(0, enemyDamage - playerShield);
+
+        playerHealth -= finalDamage;
+        UpdatePlayerHPBar();
+
+        Debug.Log("Enemy attacks! Player HP: " + playerHealth);
+
+        if (playerHealth <= 0)
+        {
+            state = BattleState.End;
+            Debug.Log("Player kalah.");
+            StartCoroutine(ChangeScene());
+            return;
+        }
+
+        state = BattleState.PlayerTurn;
+        Debug.Log("Player turn again.");
+
+        UIBattle.SetActive(false);
+        UIButtons.SetActive(true);
     }
 
     private void UpdatePlayerHPBar()
@@ -166,5 +184,18 @@ public class BattleManager : MonoBehaviour
     {
         enemyHealthSlider.value = enemyHealth;
         Debug.Log("Updating Enemy HP Bar: " + enemyHealth);
+    }
+
+    private void UpdateShieldValue()
+    {
+        playerShieldSlider.value = playerShield;
+        Debug.Log("Updating Player Shield: " + playerShield);
+    }
+
+    private IEnumerator ChangeScene()
+    {
+        ScreenFader.Instance.FadeToScene("Test");
+        yield return new WaitForSeconds(1f);
+        PlayerInstance.instance.Disabler();
     }
 }

@@ -11,6 +11,10 @@ public class RandomMovement : MonoBehaviour
     private Rigidbody2D _rb;
     private float _directionTimer;
     
+    [SerializeField] private Animator _animator;
+    [SerializeField] private SpriteRenderer _sprite;
+
+    
     // Cardinal directions
     private readonly Vector2[] _cardinalDirections = new Vector2[]
     {
@@ -23,6 +27,9 @@ public class RandomMovement : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
+        _sprite = GetComponent<SpriteRenderer>();
+
         _originalPosition = _rb.position;
         
         // Start with random direction
@@ -39,7 +46,7 @@ public class RandomMovement : MonoBehaviour
             ChooseNewDirection();
             _directionTimer = directionChangeTime;
         }
-        
+
         // Calculate parent offset
         var parentPosition = transform.parent != null ? (Vector2)transform.parent.position : Vector2.zero;
         var targetOrigin = _originalPosition + parentPosition;
@@ -55,6 +62,26 @@ public class RandomMovement : MonoBehaviour
         
         // Move in current direction
         _rb.linearVelocity = _currentDirection * speed;
+
+        UpdateAnimator();
+        UpdateFlip();
+    }
+
+    private void UpdateAnimator()
+    {
+        // bool isMoving = _currentDirection != Vector2.zero;
+        bool isMoving = _rb.linearVelocity.sqrMagnitude > 0.01f;
+        Debug.Log(isMoving);
+
+        _animator.SetBool("isMoving", isMoving);
+        _animator.SetFloat("moveX", _currentDirection.x);
+        // _animator.SetFloat("moveY", _currentDirection.y);
+    }
+
+    private void UpdateFlip()
+    {
+        if (_currentDirection.x != 0) 
+            _sprite.flipX = _currentDirection.x < 0;
     }
     
     private void OnCollisionEnter2D(Collision2D collision)

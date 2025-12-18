@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 1467281485955274041}
   - component: {fileID: -5682197872934379491}
   - component: {fileID: 9072780052486625959}
-  - component: {fileID: 3115607042576446106}
   - component: {fileID: 2468138706943595486}
   - component: {fileID: 1067920098337770825}
+  - component: {fileID: 5352511498996014067}
+  - component: {fileID: 2687713637510972120}
   m_Layer: 0
   m_Name: Goblin
   m_TagString: Enemy
@@ -32,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 9, y: 17, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4099208411971503109}
@@ -218,6 +219,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyDataSO: {fileID: 11400000, guid: a5279bf58223b6a43acbcf4059b4f627, type: 2}
+  healthSlider: {fileID: 0}
+--- !u!95 &5352511498996014067
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 838691679218435841}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0082b10034140024596e2c8e3c3322e8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2687713637510972120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 838691679218435841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78dbed1ba0973434ab5ca61b158f0119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RandomMovement
+  maxDistance: 1.5
+  speed: 1
+  directionChangeTime: 0.5
+  _animator: {fileID: 0}
+  _sprite: {fileID: 0}
 --- !u!1 &8877335833954402419
 GameObject:
   m_ObjectHideFlags: 0

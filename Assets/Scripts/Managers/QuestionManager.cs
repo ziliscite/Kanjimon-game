@@ -9,6 +9,10 @@ public class QuestionManager : MonoBehaviour
     [SerializeField] private TMP_Text questionText; 
     [SerializeField] private TMP_InputField answerField;
     [SerializeField] private BattleManager battleManager;
+    [SerializeField] private TMP_Text resultText;
+    [SerializeField] private TMP_Text explanationText;
+    [SerializeField] private Button submitButton;
+
 
     private string pendingAction; // "attack" / "defend"
 
@@ -51,31 +55,68 @@ public class QuestionManager : MonoBehaviour
 
     public void OnSubmit()
     {
+        answerField.interactable = false;
+        submitButton.interactable = false;
+
         var request = new SubmitQuestionRequest
         {
             question = currentJapanese,
             answer = answerField.text
         };
 
+        answerField.text = "";
+
         llm.SubmitQuestion(request, OnEvaluateSuccess, OnEvaluateError);
     }
 
     private void OnEvaluateSuccess(LargeLanguageResponse resp)
     {
-        Debug.Log("Score: " + resp.score);
+        // tampilkan hasil
+        resultText.text =
+            $"Score: {resp.score:0}\n";
+            // $"Jawaban benar:\n{resp.correctAnswer}";
 
-        // clear input & next word
-        answerField.text = "";
+        explanationText.text = resp.explanation;
+        Debug.Log (resp.explanation);
 
-        // KASIH SCORE KE BATTLE MANAGER
+        // kasih ke battlemanager
         battleManager.OnActionEvaluated(pendingAction, resp.score);
 
-        // Reset
+        // ubah UI jadi mode "review"
+        submitButton.GetComponentInChildren<TMP_Text>().text = "Lanjut";
+        submitButton.onClick.RemoveAllListeners();
+        submitButton.onClick.AddListener(NextQuestion);
+
         pendingAction = null;
+    }
+
+    // lanjut setelah aksi
+    private void NextQuestion()
+    {
+        submitButton.GetComponentInChildren<TMP_Text>().text = "Submit";
+        submitButton.onClick.RemoveAllListeners();
+        submitButton.onClick.AddListener(OnSubmit);
+        submitButton.interactable = true;
+
+        GenerateQuestion();
     }
 
     private void OnEvaluateError(string message)
     {
         Debug.LogError(message);
+    }
+
+    // buat ngosongin UI
+    public void ResetReviewUI()
+    {
+        resultText.text = "";
+        explanationText.text = "";
+        answerField.text = "";
+        answerField.interactable = true;
+
+        submitButton.GetComponentInChildren<TMP_Text>().text = "Submit";
+        submitButton.onClick.RemoveAllListeners();
+        submitButton.onClick.AddListener(OnSubmit);
+        submitButton.interactable = true;
     }
 }
