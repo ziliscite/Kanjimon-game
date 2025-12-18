@@ -15,6 +15,9 @@ GameObject:
   - component: {fileID: 3277546726093415493}
   - component: {fileID: 6010554407873798603}
   - component: {fileID: 5058451300828375568}
+  - component: {fileID: 9163751029320137807}
+  - component: {fileID: 868039627054519896}
+  - component: {fileID: 4328168377735153323}
   - component: {fileID: 4711482536469861427}
   - component: {fileID: 5749798132263759271}
   m_Layer: 0
@@ -139,47 +142,47 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 3bbd5fb7-68bb-4755-8a6e-5302fc6ef38d
-    m_ActionName: 'Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]'
+    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 77dffe47-ac6f-453f-a06a-aa35e20ac4b2
-    m_ActionName: 'Player/Look[/Mouse/delta,/Pen/delta]'
+    m_ActionName: Player/Look[/Mouse/delta,/Pen/delta]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: fa0bff67-1ceb-4332-a079-ae57a00e17d7
-    m_ActionName: 'Player/Fire[/Mouse/leftButton]'
+    m_ActionName: Player/Fire[/Mouse/leftButton]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: dcfc8817-e28c-4aec-a7e6-d96f88d9c0fd
-    m_ActionName: 'UI/Navigate[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]'
+    m_ActionName: UI/Navigate[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: c93c4eaf-8332-441c-bce8-c7bbd0c1068d
-    m_ActionName: 'UI/Submit[/Keyboard/enter]'
+    m_ActionName: UI/Submit[/Keyboard/enter]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: e2b42cf2-aca1-4b1a-98e8-70e602cad32a
-    m_ActionName: 'UI/Cancel[/Keyboard/escape]'
+    m_ActionName: UI/Cancel[/Keyboard/escape]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: bcfd5736-cb40-4e28-a258-313b40c97601
-    m_ActionName: 'UI/Point[/Mouse/position,/Pen/position]'
+    m_ActionName: UI/Point[/Mouse/position,/Pen/position]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 3aa66925-d3d4-4dba-b12b-394aa4c52451
-    m_ActionName: 'UI/Click[/Mouse/leftButton,/Pen/tip]'
+    m_ActionName: UI/Click[/Mouse/leftButton,/Pen/tip]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 94d7527e-53d8-4d3e-b9a6-94b35ee9978e
-    m_ActionName: 'UI/ScrollWheel[/Mouse/scroll]'
+    m_ActionName: UI/ScrollWheel[/Mouse/scroll]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: f1945495-dec4-490a-8a50-cd3685647cf0
-    m_ActionName: 'UI/MiddleClick[/Mouse/middleButton]'
+    m_ActionName: UI/MiddleClick[/Mouse/middleButton]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 8c870db6-e709-48c8-8eaf-adc67ba77be0
-    m_ActionName: 'UI/RightClick[/Mouse/rightButton]'
+    m_ActionName: UI/RightClick[/Mouse/rightButton]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 19be1bd1-0724-4a72-a19d-fb48212f97c0
@@ -188,6 +191,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 0819f220-f411-4020-83ee-02471ce60df3
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9163751029320137807}
+        m_TargetAssemblyTypeName: PlayerAttack, Assembly-CSharp
+        m_MethodName: OnAttack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d200eac9-6e2d-4af1-93da-2ff259e1d31b
+    m_ActionName: Player/Attack[/Keyboard/space]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5749798132263759271}
@@ -203,7 +222,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: d200eac9-6e2d-4af1-93da-2ff259e1d31b
-    m_ActionName: 'Player/Attack[/Keyboard/space]'
+    m_ActionName: Player/Attack[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -250,7 +269,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   moveSpeed: 5
   movement: {x: 0, y: 0}
-  character: {fileID: 4048857156291038768}
   coord: {fileID: 1716459202880774270}
   charX: 0
   charY: 0
@@ -324,6 +342,50 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 0.26723737}
   m_EdgeRadius: 0
+--- !u!114 &9163751029320137807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4048857156291038768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2499f9863057a84cba3cdb02c44c29d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  enemyCheckerBox: {fileID: 6658830969769633560}
+  playerData: {fileID: 868039627054519896}
+  enemyOnSight: {fileID: 0}
+  targetEnemyID: 0
+--- !u!114 &868039627054519896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4048857156291038768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 117fed52bf7389743958f027829e1624, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerData
+  playerHealth: 100
+  enemyBattledID: 0
+  enemyCheckerBox: {fileID: 0}
+  playerAttack: {fileID: 0}
+--- !u!114 &4328168377735153323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4048857156291038768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fa210446b4723e47ae7bccb990248ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInstance
 --- !u!114 &4711482536469861427
 MonoBehaviour:
   m_ObjectHideFlags: 0
