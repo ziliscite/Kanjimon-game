@@ -1,0 +1,457 @@
+fileFormatVersion: 2
+guid: 47229f49ed8d3ee44a0f3c89a0a326c4
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5645719154158702822
+    second: TreesAndBrushesSpriteSheet_0
+  - first:
+      213: -1837541104453116962
+    second: TreesAndBrushesSpriteSheet_1
+  - first:
+      213: 2821003175601038838
+    second: TreesAndBrushesSpriteSheet_2
+  - first:
+      213: 5882539842497589844
+    second: TreesAndBrushesSpriteSheet_3
+  - first:
+      213: 6015968900997510375
+    second: TreesAndBrushesSpriteSheet_4
+  - first:
+      213: -4815901053125255119
+    second: TreesAndBrushesSpriteSheet_5
+  - first:
+      213: -8108465073176622686
+    second: TreesAndBrushesSpriteSheet_6
+  - first:
+      213: 3906847344222151801
+    second: TreesAndBrushesSpriteSheet_7
+  - first:
+      213: 6602722596230352238
+    second: TreesAndBrushesSpriteSheet_8
+  - first:
+      213: -2717639806613277685
+    second: TreesAndBrushesSpriteSheet_9
+  - first:
+      213: 5345064990878551737
+    second: TreesAndBrushesSpriteSheet_10
+  - first:
+      213: 4446272383961069106
+    second: TreesAndBrushesSpriteSheet_11
+  - first:
+      213: 179522676192898531
+    second: TreesAndBrushesSpriteSheet_12
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: TreesAndBrushesSpriteSheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 138
+        width: 43
+        height: 40
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1f60c2775066a1b0800000000000000
+      internalID: -5645719154158702822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TreesAndBrushesSpriteSheet_1
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 138
+        width: 43
+        height: 40
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: edb94e8e91ebf76e0800000000000000
+      internalID: -1837541104453116962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TreesAndBrushesSpriteSheet_2
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 80
+        width: 66
+        height: 97
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f5e2ff1177362720800000000000000
+      internalID: 2821003175601038838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TreesAndBrushesSpriteSheet_3
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 80
+        width: 66
+        height: 97
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 452b629d1daf2a150800000000000000
+      internalID: 5882539842497589844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TreesAndBrushesSpriteSheet_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 97
+        width: 43
+        height: 40
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e4f0cb67d30d7350800000000000000
+      internalID: 6015968900997510375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TreesAndBrushesSpriteSheet_5
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 97
+        width: 43
+        height: 40
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1302a07028b7a2db0800000000000000
+      internalID: -4815901053125255119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TreesAndBrushesSpriteSheet_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 56
+        width: 43
+        height: 40
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a945a7f9f1f87f80800000000000000
+      internalID: -8108465073176622686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TreesAndBrushesSpriteSheet_7
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 56
+        width: 43
+        height: 40
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9742a00d5f8e73630800000000000000
+      internalID: 3906847344222151801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TreesAndBrushesSpriteSheet_8
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 0
+        width: 32
+        height: 74
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6d41c2f73591ab50800000000000000
+      internalID: 6602722596230352238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TreesAndBrushesSpriteSheet_9
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 0
+        width: 32
+        height: 74
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b04ba5b9ef0094ad0800000000000000
+      internalID: -2717639806613277685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TreesAndBrushesSpriteSheet_10
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 47
+        width: 30
+        height: 24
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9be41b23a4c7d2a40800000000000000
+      internalID: 5345064990878551737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TreesAndBrushesSpriteSheet_11
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 15
+        width: 43
+        height: 40
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 236f0a40d2554bd30800000000000000
+      internalID: 4446272383961069106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TreesAndBrushesSpriteSheet_12
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 15
+        width: 43
+        height: 40
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3edea9f3ceacd7200800000000000000
+      internalID: 179522676192898531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: e22fa2b00adc6aa40a140c6d7002e40a
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      TreesAndBrushesSpriteSheet_0: -5645719154158702822
+      TreesAndBrushesSpriteSheet_1: -1837541104453116962
+      TreesAndBrushesSpriteSheet_10: 5345064990878551737
+      TreesAndBrushesSpriteSheet_11: 4446272383961069106
+      TreesAndBrushesSpriteSheet_12: 179522676192898531
+      TreesAndBrushesSpriteSheet_2: 2821003175601038838
+      TreesAndBrushesSpriteSheet_3: 5882539842497589844
+      TreesAndBrushesSpriteSheet_4: 6015968900997510375
+      TreesAndBrushesSpriteSheet_5: -4815901053125255119
+      TreesAndBrushesSpriteSheet_6: -8108465073176622686
+      TreesAndBrushesSpriteSheet_7: 3906847344222151801
+      TreesAndBrushesSpriteSheet_8: 6602722596230352238
+      TreesAndBrushesSpriteSheet_9: -2717639806613277685
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
