@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3920825472265635962}
   - component: {fileID: 3315331134527701233}
-  - component: {fileID: 9112297558162498379}
   - component: {fileID: -5461034100856582828}
+  - component: {fileID: 2197443595662016341}
   m_Layer: 0
   m_Name: Exit
   m_TagString: Untagged
@@ -92,18 +92,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &9112297558162498379
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2569916119988166342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5f27b689804ff44982444ea3a475993, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TeleporterTrigger
 --- !u!61 &-5461034100856582828
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -150,3 +138,15 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.86013055, y: 0.6354659}
   m_EdgeRadius: 0
+--- !u!114 &2197443595662016341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2569916119988166342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5f27b689804ff44982444ea3a475993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TeleporterTrigger

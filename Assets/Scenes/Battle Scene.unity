@@ -416,9 +416,13 @@ MonoBehaviour:
   enemyList:
   - {fileID: 3847827573519191160, guid: 10699dd50ff6edb48b02041f7a12b953, type: 3}
   - {fileID: 4268597424691880558, guid: 56e4d3353aa3b624da940c293aefea22, type: 3}
-  - {fileID: 838691679218435841, guid: f82eb437f67038d428554fea1a0776eb, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 1262580664179387890, guid: 6036693737be0fd4b810a2877c68eacc, type: 3}
   spawnPoint: {fileID: 1175345919}
+  playerData: {fileID: 0}
   currentEnemyID: 0
+  isEnemyBoss: 0
   enemyHealthSpawned: 0
 --- !u!1 &392587441
 GameObject:

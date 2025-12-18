@@ -50,7 +50,7 @@ public class BattleManager : MonoBehaviour
         while (enemySpawner.SpawnedEnemy == null)
             yield return null;
 
-        playerHealth = PlayerManager.instance.playerHP;
+        playerHealth = PlayerManager.Instance.playerHP;
 
         enemyHealth = enemySpawner.enemyHealthSpawned;
         enemyHealthSlider = enemySpawner.SpawnedEnemy.healthSlider;
@@ -129,7 +129,12 @@ public class BattleManager : MonoBehaviour
 
                 if (enemyHealth <= 0)
                 {
-                    PlayerManager.instance.playerHP = playerHealth; // update data HP player ke global
+                    if (enemySpawner.isEnemyBoss)
+                    {
+                        BossManager.Instance.SetBossDead(true);
+                    }
+                    
+                    PlayerManager.Instance.playerHP = playerHealth; // update data HP player ke global
                     state = BattleState.End;
                     StartCoroutine(ChangeScene());
                     return;

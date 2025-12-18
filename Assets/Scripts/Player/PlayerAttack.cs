@@ -11,8 +11,8 @@ public class PlayerAttack : MonoBehaviour
     
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.performed)
-            AttackAction();
+        // alergi kurung kurawal kah bos
+        if (context.performed) AttackAction();
     }
 
     private void AttackAction()
@@ -20,7 +20,7 @@ public class PlayerAttack : MonoBehaviour
         if (enemyCheckerBox != null && enemyCheckerBox.enemyInsideRange)
         {
             var enemyData = enemyOnSight.GetComponent<EnemyData>().enemyDataSO;
-            PlayerManager.instance.enemyBattledID = enemyData.enemyID;
+            PlayerManager.Instance.enemyBattledID = enemyData.enemyID;
 
             StartCoroutine(ChangeScene());
         }
