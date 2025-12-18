@@ -20,8 +20,22 @@ public class PlayerAttack : MonoBehaviour
         if (enemyCheckerBox != null && enemyCheckerBox.enemyInsideRange)
         {
             var enemyData = enemyOnSight.GetComponent<EnemyData>().enemyDataSO;
-            PlayerManager.Instance.enemyBattledID = enemyData.enemyID;
-
+            var enemyInstanceIndex = -1;
+            if (int.TryParse(enemyOnSight.name, out int number))
+            {
+                enemyInstanceIndex = number;
+            }
+            
+            PlayerManager.Instance.SetEnemyData(enemyData.enemyID, enemyInstanceIndex, enemyData.isBoss);
+            PlayerManager.Instance.lastPosition = transform.position;
+            
+            Walker walkerScript = FindFirstObjectByType<Walker>();
+            if (walkerScript != null)
+            {
+                walkerScript.SaveCurrentLevelState();
+            }
+        
+            PlayerManager.Instance.isReturningFromBattle = true;
             StartCoroutine(ChangeScene());
         }
     }

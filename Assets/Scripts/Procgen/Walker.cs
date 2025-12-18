@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -60,19 +61,29 @@ public class Walker : MonoBehaviour
             TriggerRegenerate();
         }
     }
-
-    // defaultnya mati le, nanti bikin trigger aja ketika pindah dari level 1 ke dungeon, panggil block of code dibawah
-    void Start()
-    {
-        // restart all level data, ntar apus kl dah beneer
-        PlayerManager.Instance.SetFloor(1);
-        LevelRepository.Instance.DeleteAllLevelData();
-        CalculateGridBounds();
-        TriggerRegenerate();
-        
-        // disini dibikin cek, akses player manager, kalau player punya save file, load dari last position
-    }
     
+    // defaultnya mati le, nanti bikin trigger aja ketika pindah dari level 1 ke dungeon, panggil block of code dibawah
+    IEnumerator Start()
+    {
+        CalculateGridBounds();
+        // LevelRepository.Instance.DeleteAllLevelData();
+    
+        // NEW: Check if returning from battle
+        if (PlayerManager.Instance != null && PlayerManager.Instance.isReturningFromBattle)
+        {
+            Debug.Log("[Walker] Returning from battle - loading saved level");
+            PlayerManager.Instance.isReturningFromBattle = false; // Reset flag
+            LoadLevel(PlayerManager.Instance.lastFloor, 0); // Load current floor
+        }
+        else
+        {
+            Debug.Log("[Walker] First time or new game - generating level");
+            TriggerRegenerate();
+        }
+    
+        yield return null;
+    }
+
     // Calculate grid and walker bounds based on girdSize and borderSize
     private void CalculateGridBounds()
     {
@@ -467,6 +478,12 @@ public class Walker : MonoBehaviour
         }
     }
     
+    public void SaveCurrentLevelState()
+    {
+        Debug.Log($"[Walker] Saving current level state for floor {PlayerManager.Instance.lastFloor}");
+        SaveObjects();
+    }
+
     private void SaveObjects()
     {
         Debug.Log($"[Walker] Saving objects for level {PlayerManager.Instance.lastFloor}");
