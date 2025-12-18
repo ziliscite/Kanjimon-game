@@ -15,5 +15,4 @@ MonoBehaviour:
   enemyID: 1
   enemyName: Goblin Amber
   hp: 150
-  attack: 5
-  exp: 5
+  attackPower: 10
