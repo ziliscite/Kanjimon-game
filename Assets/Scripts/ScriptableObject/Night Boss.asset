@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDataSO
   enemyID: 5
   enemyName: Night Boss
-  hp: 400
-  attack: 10
-  exp: 20
+  hp: 10
+  attackPower: 20
+  isBoss: 1

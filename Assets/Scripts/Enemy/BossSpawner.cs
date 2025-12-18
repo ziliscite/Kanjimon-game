@@ -38,7 +38,7 @@ public class BossSpawner : MonoBehaviour
         if (tilemap == null) return;
         
         // collect all valid positions
-        var validPositions = new List<Vector3Int>();
+        var validPositions = new System.Collections.Generic.List<Vector3Int>();
         foreach (var offset in offsets)
         {
             var candidatePos = exitPos + offset;
@@ -50,15 +50,37 @@ public class BossSpawner : MonoBehaviour
             }
         }
         
-        // if no valid positions found, fallback to random placement
+        // if no valid positions found at distance 2, try distance 3
+        // (distance 1 is occupied by door surrounds)
         if (validPositions.Count == 0)
         {
-            var fallbackPos = exitPos + new Vector3Int(-1, 0, 0);
-            var fallbackWorldPos = objectPlacer.TileToWorldPosition(fallbackPos);
+            Vector3Int[] fallbackOffsets = {
+                new Vector3Int(3, 0, 0),   // right
+                new Vector3Int(-3, 0, 0),  // left
+                new Vector3Int(0, 3, 0),   // up
+                new Vector3Int(0, -3, 0)   // down
+            };
             
-            var instance = Instantiate(bossPrefab, fallbackWorldPos, Quaternion.identity);
-            _objectInstance = instance;
-            return;
+            foreach (var offset in fallbackOffsets)
+            {
+                var candidatePos = exitPos + offset;
+                
+                if (tilemap.HasTile(candidatePos))
+                {
+                    validPositions.Add(candidatePos);
+                }
+            }
+            
+            // if still no valid positions, just place at distance 3 to the left regardless
+            if (validPositions.Count == 0)
+            {
+                var lastResortPos = exitPos + new Vector3Int(-3, 0, 0);
+                var lastResortWorldPos = objectPlacer.TileToWorldPosition(lastResortPos);
+                
+                var instance = Instantiate(bossPrefab, lastResortWorldPos, Quaternion.identity);
+                _objectInstance = instance;
+                return;
+            }
         }
         
         // randomly pick one of the valid positions

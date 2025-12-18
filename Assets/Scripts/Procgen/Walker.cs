@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
@@ -33,7 +32,6 @@ public class Walker : MonoBehaviour
     
     [Header("Level Persistence")]
     [SerializeField] private string playerId = "player1";
-    [SerializeField] private int currentLevel = 1;
     
     [Header("Objects References")]
     // reference to another class
@@ -67,6 +65,7 @@ public class Walker : MonoBehaviour
     void Start()
     {
         // restart all level data, ntar apus kl dah beneer
+        PlayerManager.Instance.SetFloor(1);
         LevelRepository.Instance.DeleteAllLevelData();
         CalculateGridBounds();
         TriggerRegenerate();
@@ -282,9 +281,9 @@ public class Walker : MonoBehaviour
         
         LevelData levelData = new LevelData
         {
-            levelId = LevelRepository.Instance.GetLevelId(playerId, currentLevel),
+            levelId = LevelRepository.Instance.GetLevelId(playerId, PlayerManager.Instance.lastFloor),
             playerId = playerId,
-            level = currentLevel,
+            level = PlayerManager.Instance.lastFloor,
             groundTiles = GetGroundTilesList(),
             entryDoor = teleporterHandler.EntryDoor,
             exitDoor = teleporterHandler.ExitDoor
@@ -435,19 +434,19 @@ public class Walker : MonoBehaviour
         GenerateLevel();
         Debug.Log($"[Walker] enemyPlacer null? {enemyPlacer == null}");
         Debug.Log($"[Walker] potionPlacer null? {potionPlacer == null}");
-        Debug.Log($"[Walker] Trigger regeneration for level {currentLevel}");
+        Debug.Log($"[Walker] Trigger regeneration for level {PlayerManager.Instance.lastFloor}");
         Debug.Log($"[Walker] bossPlacer null? {bossPlacer == null}");
         
         // trigger placements for the first time
         if (enemyPlacer != null)
         {
-            Debug.Log($"[Walker] Triggering enemy placement for level {currentLevel}");
+            Debug.Log($"[Walker] Triggering enemy placement for level {PlayerManager.Instance.lastFloor}");
             enemyPlacer.OnLevelGenerated();
         }
 
         if (potionPlacer != null)
         {
-            Debug.Log($"[Walker] Triggering potion placement for level {currentLevel}");
+            Debug.Log($"[Walker] Triggering potion placement for level {PlayerManager.Instance.lastFloor}");
             potionPlacer.OnLevelGenerated();
         }
         
@@ -470,15 +469,15 @@ public class Walker : MonoBehaviour
     
     private void SaveObjects()
     {
-        Debug.Log($"[Walker] Saving objects for level {currentLevel}");
+        Debug.Log($"[Walker] Saving objects for level {PlayerManager.Instance.lastFloor}");
         if (potionPlacer != null && enemyPlacer != null)
         {
             var potionData = potionPlacer.GetPotionData();
             var monsterData = enemyPlacer.GetMonsterData();
             var bossData = bossPlacer.GetBossPosition();
             
-            Debug.Log($"[Walker] Saving level {currentLevel} with {potionData.Count} potions and {monsterData.Count} monsters");
-            LevelRepository.Instance.SaveLevelObjects(LevelRepository.Instance.GetLevelId(playerId, currentLevel), potionData, monsterData, bossData);
+            Debug.Log($"[Walker] Saving level {PlayerManager.Instance.lastFloor} with {potionData.Count} potions and {monsterData.Count} monsters");
+            LevelRepository.Instance.SaveLevelObjects(LevelRepository.Instance.GetLevelId(playerId, PlayerManager.Instance.lastFloor), potionData, monsterData, bossData);
         }
     }
     
@@ -489,13 +488,13 @@ public class Walker : MonoBehaviour
         // Save the current level's objects before loading the next level
         SaveObjects();
         
-        var level = currentLevel + levelIncrement;
+        var level = PlayerManager.Instance.lastFloor + levelIncrement;
         if (level < 1)
         {
             return;
         }
 
-        currentLevel = level;
-        LoadLevel(currentLevel, levelIncrement);
+        PlayerManager.Instance.SetFloor(level);
+        LoadLevel(PlayerManager.Instance.lastFloor, levelIncrement);
     }
 }

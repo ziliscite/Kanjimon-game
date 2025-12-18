@@ -9,7 +9,7 @@ public static class SaveManager
 
     public static void SaveGame()
     {
-        PlayerManager pm = PlayerManager.instance;
+        PlayerManager pm = PlayerManager.Instance;
 
         SaveData data = new SaveData
         {

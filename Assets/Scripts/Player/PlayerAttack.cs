@@ -20,7 +20,7 @@ public class PlayerAttack : MonoBehaviour
         if (enemyCheckerBox != null && enemyCheckerBox.enemyInsideRange)
         {
             var enemyData = enemyOnSight.GetComponent<EnemyData>().enemyDataSO;
-            PlayerManager.instance.enemyBattledID = enemyData.enemyID;
+            PlayerManager.Instance.enemyBattledID = enemyData.enemyID;
 
             StartCoroutine(ChangeScene());
         }

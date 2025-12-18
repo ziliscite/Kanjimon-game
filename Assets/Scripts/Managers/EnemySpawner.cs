@@ -13,7 +13,7 @@ public class EnemySpawner : MonoBehaviour
     
     void Awake()
     {
-        currentEnemyID = PlayerManager.instance.enemyBattledID;
+        currentEnemyID = PlayerManager.Instance.enemyBattledID;
     }
     
     void Start()
