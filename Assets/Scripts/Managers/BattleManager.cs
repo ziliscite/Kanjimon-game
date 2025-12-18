@@ -122,6 +122,11 @@ public class BattleManager : MonoBehaviour
 
             if (enemyHealth <= 0)
             {
+                if (enemySpawner.isEnemyBoss)
+                {
+                    BossManager.Instance.SetBossDead(true);
+                }
+                
                 state = BattleState.End;
                 StartCoroutine(ChangeScene());
                 return;

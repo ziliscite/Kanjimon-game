@@ -20,7 +20,7 @@ public class TeleporterTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (_walker != null)
+            if (BossManager.Instance != null && BossManager.Instance.IsBossDead() && _walker != null)
             {
                 _walker.TriggerLoad(_direction);
             }

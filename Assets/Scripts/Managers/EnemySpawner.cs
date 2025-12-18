@@ -7,6 +7,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private PlayerData playerData;
     public int currentEnemyID;
+    public bool isEnemyBoss;
     public int enemyHealthSpawned;
     
     void Awake()
@@ -38,6 +39,7 @@ public class EnemySpawner : MonoBehaviour
                 break;
         }
         enemyHealthSpawned = enemyList[enemyID - 1].GetComponent<EnemyData>().enemyDataSO.hp;
+        isEnemyBoss = enemyList[enemyID - 1].GetComponent<EnemyData>().enemyDataSO.isBoss;
         Debug.Log("Spawned Enemy ID: " + enemyID);
     }
 }

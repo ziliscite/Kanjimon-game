@@ -10,4 +10,5 @@ public class EnemyDataSO : ScriptableObject
     public int attack;
     public int exp; // buat exp ke player setelah kill
     // public GameObject enemyPrefab;
+    public bool isBoss;
 }

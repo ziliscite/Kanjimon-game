@@ -12,8 +12,8 @@ public class PlayerAttack : MonoBehaviour
     
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.performed)
-            AttackAction();
+        // alergi kurung kurawal kah bos
+        if (context.performed) AttackAction();
     }
 
     private void AttackAction()

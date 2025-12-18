@@ -71,7 +71,6 @@ public class RandomMovement : MonoBehaviour
     {
         // bool isMoving = _currentDirection != Vector2.zero;
         bool isMoving = _rb.linearVelocity.sqrMagnitude > 0.01f;
-        Debug.Log(isMoving);
 
         _animator.SetBool("isMoving", isMoving);
         _animator.SetFloat("moveX", _currentDirection.x);

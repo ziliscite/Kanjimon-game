@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 5202775090279647817}
   - component: {fileID: 2493310540518731963}
   - component: {fileID: 3277546726093415493}
-  - component: {fileID: 2722300359941472042}
   - component: {fileID: 6010554407873798603}
   - component: {fileID: 5058451300828375568}
+  - component: {fileID: 4711482536469861427}
+  - component: {fileID: 5749798132263759271}
   m_Layer: 0
   m_Name: PlayerRoaming
   m_TagString: Player
@@ -189,8 +190,8 @@ MonoBehaviour:
     m_ActionName: UI/TrackedDeviceOrientation
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3277546726093415493}
-        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+      - m_Target: {fileID: 5749798132263759271}
+        m_TargetAssemblyTypeName: PlayerAttack, Assembly-CSharp
         m_MethodName: OnAttack
         m_Mode: 0
         m_Arguments:
@@ -255,20 +256,6 @@ MonoBehaviour:
   charY: 0
   attackBox: {fileID: 4354731991505424946}
   boxOffset: 1
-  triggerBattle: {fileID: 2722300359941472042}
-  enemyChecker: {fileID: 6658830969769633560}
---- !u!114 &2722300359941472042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4048857156291038768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6692b582e987cf04ab0904ca91041ef2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TriggerBattle
 --- !u!95 &6010554407873798603
 Animator:
   serializedVersion: 7
@@ -337,6 +324,38 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 0.26723737}
   m_EdgeRadius: 0
+--- !u!114 &4711482536469861427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4048857156291038768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 117fed52bf7389743958f027829e1624, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerData
+  playerHealth: 100
+  enemyBattledID: 0
+  enemyCheckerBox: {fileID: 0}
+  playerAttack: {fileID: 0}
+--- !u!114 &5749798132263759271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4048857156291038768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2499f9863057a84cba3cdb02c44c29d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  enemyCheckerBox: {fileID: 6658830969769633560}
+  playerData: {fileID: 4711482536469861427}
+  enemyOnSight: {fileID: 0}
+  targetEnemyID: 0
 --- !u!1 &4354731991505424946
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,6 +447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640063d48fd7dfa48aff7462c61889c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyChecker
+  playerAttack: {fileID: 5749798132263759271}
   enemyInsideRange: 0
   targetEnemy: {fileID: 0}
 --- !u!1 &6787891946972752503

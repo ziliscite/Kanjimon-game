@@ -32,7 +32,6 @@ public class Walker : MonoBehaviour
     [SerializeField] private int borderSize = 3; // the size of the border (inaccessible area)
     
     [Header("Level Persistence")]
-    [SerializeField] private LevelManager levelManager;
     [SerializeField] private string playerId = "player1";
     [SerializeField] private int currentLevel = 1;
     
@@ -42,6 +41,7 @@ public class Walker : MonoBehaviour
     [SerializeField] private TeleporterHandler teleporterHandler;
     [SerializeField] private PotionSpawner potionPlacer;
     [SerializeField] private MonsterSpawner enemyPlacer;
+    [SerializeField] private BossSpawner bossPlacer;
     
     // Grid and walker management variable
     private bool[,] _visitedTiles; // keep track of visited tiles
@@ -67,9 +67,11 @@ public class Walker : MonoBehaviour
     void Start()
     {
         // restart all level data, ntar apus kl dah beneer
-        levelManager.DeleteAllLevelData();
+        LevelRepository.Instance.DeleteAllLevelData();
         CalculateGridBounds();
         TriggerRegenerate();
+        
+        // disini dibikin cek, akses player manager, kalau player punya save file, load dari last position
     }
     
     // Calculate grid and walker bounds based on girdSize and borderSize
@@ -177,10 +179,10 @@ public class Walker : MonoBehaviour
             }
         }
         
-        // guaranteed 3x3 at the end dan start buat teleporter
-        for (int ox = -1; ox <= 1; ox++)
+        // guaranteed 5x5 at the end dan start buat teleporter
+        for (int ox = 0; ox <= 4; ox++)
         {
-            for (int oy = -1; oy <= 1; oy++)
+            for (int oy = 0; oy <= 4; oy++)
             {
                 var p = new Vector2Int(curPos.x + ox, curPos.y + oy);
 
@@ -280,7 +282,7 @@ public class Walker : MonoBehaviour
         
         LevelData levelData = new LevelData
         {
-            levelId = levelManager.GetLevelId(playerId, currentLevel),
+            levelId = LevelRepository.Instance.GetLevelId(playerId, currentLevel),
             playerId = playerId,
             level = currentLevel,
             groundTiles = GetGroundTilesList(),
@@ -288,7 +290,7 @@ public class Walker : MonoBehaviour
             exitDoor = teleporterHandler.ExitDoor
         };
         
-        levelManager.SaveLevel(levelData);
+        LevelRepository.Instance.SaveLevel(levelData);
     }
     
     private List<TileData> GetGroundTilesList()
@@ -343,7 +345,7 @@ public class Walker : MonoBehaviour
     // Load existing level
     private void LoadLevel(int levelNumber, int levelIncrement)
     {
-        LevelData data = levelManager.LoadOrNull(playerId, levelNumber);
+        LevelData data = LevelRepository.Instance.LoadOrNull(playerId, levelNumber);
         Debug.Log($"[Walker] LoadLevel called for level {levelNumber}, dataNull={data==null}");
 
         if (data != null && data.groundTiles.Count > 0)
@@ -402,6 +404,11 @@ public class Walker : MonoBehaviour
         {
             enemyPlacer.PlaceMonstersFromData(data.enemyPositions);
         }
+
+        if (bossPlacer != null)
+        {
+            bossPlacer.PlaceBossFromData(data.bossPosition);
+        }
         
         if (potionPlacer != null)
         {
@@ -429,6 +436,7 @@ public class Walker : MonoBehaviour
         Debug.Log($"[Walker] enemyPlacer null? {enemyPlacer == null}");
         Debug.Log($"[Walker] potionPlacer null? {potionPlacer == null}");
         Debug.Log($"[Walker] Trigger regeneration for level {currentLevel}");
+        Debug.Log($"[Walker] bossPlacer null? {bossPlacer == null}");
         
         // trigger placements for the first time
         if (enemyPlacer != null)
@@ -452,6 +460,12 @@ public class Walker : MonoBehaviour
         {
             GenerateAndSaveWhenDoorsReady();
         }
+
+        Debug.Log("[Walker] Is this called?");
+        if (bossPlacer != null)
+        {
+            bossPlacer.OnLevelGenerated();
+        }
     }
     
     private void SaveObjects()
@@ -461,9 +475,10 @@ public class Walker : MonoBehaviour
         {
             var potionData = potionPlacer.GetPotionData();
             var monsterData = enemyPlacer.GetMonsterData();
+            var bossData = bossPlacer.GetBossPosition();
             
             Debug.Log($"[Walker] Saving level {currentLevel} with {potionData.Count} potions and {monsterData.Count} monsters");
-            levelManager.SaveLevelObjects(levelManager.GetLevelId(playerId, currentLevel), potionData, monsterData);
+            LevelRepository.Instance.SaveLevelObjects(LevelRepository.Instance.GetLevelId(playerId, currentLevel), potionData, monsterData, bossData);
         }
     }
     
