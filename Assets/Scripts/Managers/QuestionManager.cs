@@ -14,6 +14,7 @@ public class QuestionManager : MonoBehaviour
     [SerializeField] private Button submitButton;
 
 
+    private bool isEvaluating = false;
     private string pendingAction; // "attack" / "defend"
 
     private string currentJapanese;
@@ -55,6 +56,9 @@ public class QuestionManager : MonoBehaviour
 
     public void OnSubmit()
     {
+        if (isEvaluating) return;
+        isEvaluating = true;
+
         answerField.interactable = false;
         submitButton.interactable = false;
 
@@ -71,6 +75,8 @@ public class QuestionManager : MonoBehaviour
 
     private void OnEvaluateSuccess(LargeLanguageResponse resp)
     {
+        isEvaluating = false;
+
         // tampilkan hasil
         resultText.text =
             $"Score: {resp.score:0}\n";
@@ -90,19 +96,10 @@ public class QuestionManager : MonoBehaviour
         pendingAction = null;
     }
 
-    // lanjut setelah aksi
-    private void NextQuestion()
-    {
-        submitButton.GetComponentInChildren<TMP_Text>().text = "Submit";
-        submitButton.onClick.RemoveAllListeners();
-        submitButton.onClick.AddListener(OnSubmit);
-        submitButton.interactable = true;
-
-        GenerateQuestion();
-    }
-
     private void OnEvaluateError(string message)
     {
+        isEvaluating = false;
+
         explanationText.text = message;
         Debug.LogError(message);
 
@@ -112,6 +109,17 @@ public class QuestionManager : MonoBehaviour
         battleManager.CancelActionAndReturnToPlayer();
 
         pendingAction = null;
+    }
+
+    // lanjut setelah aksi
+    private void NextQuestion()
+    {
+        submitButton.GetComponentInChildren<TMP_Text>().text = "Submit";
+        submitButton.onClick.RemoveAllListeners();
+        submitButton.onClick.AddListener(OnSubmit);
+        submitButton.interactable = true;
+
+        GenerateQuestion();
     }
 
     // buat ngosongin UI

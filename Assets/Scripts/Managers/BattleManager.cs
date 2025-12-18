@@ -40,21 +40,27 @@ public class BattleManager : MonoBehaviour
     [Header("Delay")]
     [SerializeField] private float postEvaluationDelay = 5f;
 
-    void Start()
+    IEnumerator Start()
     {
+        // tunggu sampe enemy beneran ada
+        while (enemySpawner.SpawnedEnemy == null)
+            yield return null;
+
         playerHealth = PlayerManager.instance.playerHP;
+
         enemyHealth = enemySpawner.enemyHealthSpawned;
-        enemyHealthSlider = FindFirstObjectByType<EnemyData>().healthSlider;
+        enemyHealthSlider = enemySpawner.SpawnedEnemy.healthSlider;
 
         playerShield = 0;
-        playerShieldSlider.maxValue = 100;
-        playerShieldSlider.value = playerShield;
 
         playerHealthSlider.maxValue = playerHealth;
         playerHealthSlider.value = playerHealth;
 
         enemyHealthSlider.maxValue = enemyHealth;
         enemyHealthSlider.value = enemyHealth;
+
+        playerShieldSlider.maxValue = 100;
+        playerShieldSlider.value = 0;
 
         state = BattleState.PlayerTurn;
     }
@@ -100,29 +106,37 @@ public class BattleManager : MonoBehaviour
 
     public void OnActionEvaluated(string action, float score)
     {
-        if (action == "attack")
+        if (state != BattleState.WaitingLLM)
         {
-            int dmg = Mathf.RoundToInt(score);
-            enemyHealth -= dmg;
-            UpdateEnemyHPBar();
+            Debug.Log("Ignored duplicate evaluation");
+            return;
+        }
+        
+        Debug.Log($"[Battle] Action: {action}, Score: {score}");
+        bool success = score > 10f; // threshold bebas
 
-            if (enemyHealth <= 0)
+        if (success)
+        {
+            if (action == "attack")
             {
-                state = BattleState.End;
-                StartCoroutine(ChangeScene());
-                return;
+                enemyHealth -= Mathf.RoundToInt(score);
+                UpdateEnemyHPBar();
+
+                if (enemyHealth <= 0)
+                {
+                    state = BattleState.End;
+                    StartCoroutine(ChangeScene());
+                    return;
+                }
+            }
+            else if (action == "defend")
+            {
+                playerShield += Mathf.RoundToInt(score);
+                playerShield = Mathf.Clamp(playerShield, 0, 100);
+                UpdateShieldBar();
             }
         }
-        else if (action == "defend")
-        {
-            int shieldGain = Mathf.RoundToInt(score);
-            playerShield += shieldGain;
 
-            playerShield = Mathf.Clamp(playerShield, 0, 100);
-            UpdateShieldBar();
-        }
-
-        // delay sebelum turn musuh (buat proses jawaban dulu)
         StartCoroutine(DelayedEnemyTurn());
     }
 
@@ -148,13 +162,11 @@ public class BattleManager : MonoBehaviour
         if (playerHealth <= 0)
         {
             state = BattleState.End;
-            Debug.Log("Player kalah.");
             StartCoroutine(ChangeScene());
             return;
         }
 
         state = BattleState.PlayerTurn;
-        Debug.Log("Player turn again.");
 
         UIBattle.SetActive(false);
         UIButtons.SetActive(true);

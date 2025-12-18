@@ -1267,9 +1267,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 457f0fa084ae7684cadadd5561443774, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  currentEnemy: {fileID: 0}
-  playerHP: 0
+  playerHP: 100
   potionsLeft: 0
+  enemyBattledID: 0
 --- !u!4 &867089146
 Transform:
   m_ObjectHideFlags: 0
