@@ -6,6 +6,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private GameObject[] enemyList;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private PlayerData playerData;
+    public EnemyData SpawnedEnemy { get; private set; }
     public int currentEnemyID;
     public bool isEnemyBoss;
     public int enemyHealthSpawned;
