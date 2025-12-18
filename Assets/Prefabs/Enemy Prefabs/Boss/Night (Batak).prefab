@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyDataSO: {fileID: 11400000, guid: 1cee4de24a185c648b45f3b309f61601, type: 2}
-  healthSlider: {fileID: 0}
+  healthSlider: {fileID: 3211605936397292278}
 --- !u!1 &8781806581471779524
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,6 +437,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 799c451d40e467b498ed1571064530cb, type: 3}
+--- !u!114 &3211605936397292278 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 662569820523799909, guid: 799c451d40e467b498ed1571064530cb, type: 3}
+  m_PrefabInstance: {fileID: 2711168249441564563}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!224 &4139443452326665646 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2076793622249302589, guid: 799c451d40e467b498ed1571064530cb, type: 3}
