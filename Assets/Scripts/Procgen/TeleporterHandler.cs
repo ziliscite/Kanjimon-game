@@ -165,7 +165,6 @@ public class TeleporterHandler : MonoBehaviour
         var exitTrigger = _exitInstance.GetComponent<TeleporterTrigger>();
         if (exitTrigger != null)
         {
-            exitTrigger.SetWalker(walker);
             exitTrigger.SetDirection(1);
         }
     }
@@ -198,7 +197,6 @@ public class TeleporterHandler : MonoBehaviour
         var entryTrigger = _entryInstance.GetComponent<TeleporterTrigger>();
         if (entryTrigger != null)
         {
-            entryTrigger.SetWalker(walker);
             entryTrigger.SetDirection(-1);
         }
     }

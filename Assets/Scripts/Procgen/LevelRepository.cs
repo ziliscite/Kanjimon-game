@@ -29,6 +29,13 @@ using JetBrains.Annotations;
     public int enemyId;
 }
 
+[Serializable] public class BossPosition
+{
+    public int x;
+    public int y;
+    public int enemyId;
+}
+
 [Serializable] public class LevelData
 {
     public string levelId;
@@ -39,10 +46,33 @@ using JetBrains.Annotations;
     public TeleporterPosition exitDoor;
     public List<PotionPosition> potionPositions;
     public List<EnemyPosition> enemyPositions;
+    public BossPosition bossPosition;
 }
 
-public class LevelManager : MonoBehaviour
+public class LevelRepository : MonoBehaviour
 {
+    public static LevelRepository Instance;
+    
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+    
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
+    
     // Check if a level file exists
     private bool LevelExists(string levelId)
     {
@@ -101,7 +131,7 @@ public class LevelManager : MonoBehaviour
     }
 
     // load old level by id, modify potionData and monsterData, then save
-    public void SaveLevelObjects(string levelId, List<PotionPosition> potionData, List<EnemyPosition> monsterData)
+    public void SaveLevelObjects(string levelId, List<PotionPosition> potionData, List<EnemyPosition> monsterData, BossPosition bossData)
     {
         LevelData levelData = LoadLevel(levelId);
         if (levelData == null)
@@ -112,6 +142,7 @@ public class LevelManager : MonoBehaviour
 
         levelData.potionPositions = potionData;
         levelData.enemyPositions = monsterData;
+        levelData.bossPosition = bossData;
         
         Debug.Log($"[LevelManager] Saving level {levelId} with {potionData.Count} potions and {monsterData.Count} monsters");
         SaveLevel(levelData);

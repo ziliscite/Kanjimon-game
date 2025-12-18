@@ -8,4 +8,5 @@ public class EnemyDataSO : ScriptableObject
     public string enemyName;
     public int hp;
     public int attackPower;
+    public bool isBoss;
 }

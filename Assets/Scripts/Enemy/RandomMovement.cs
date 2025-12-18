@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class RandomMovement : MonoBehaviour
 {
+    private static readonly int IsMoving = Animator.StringToHash("isMoving");
+    private static readonly int MoveX = Animator.StringToHash("moveX");
     [SerializeField] private float maxDistance = 1.5f; // maximum distance from origin
     [SerializeField] private float speed = 1f; // movement speed
     [SerializeField] private float directionChangeTime = 0.5f; // time before randomly changing direction
@@ -71,10 +73,9 @@ public class RandomMovement : MonoBehaviour
     {
         // bool isMoving = _currentDirection != Vector2.zero;
         bool isMoving = _rb.linearVelocity.sqrMagnitude > 0.01f;
-        Debug.Log(isMoving);
 
-        _animator.SetBool("isMoving", isMoving);
-        _animator.SetFloat("moveX", _currentDirection.x);
+        _animator.SetBool(IsMoving, isMoving);
+        _animator.SetFloat(MoveX, _currentDirection.x);
         // _animator.SetFloat("moveY", _currentDirection.y);
     }
 
