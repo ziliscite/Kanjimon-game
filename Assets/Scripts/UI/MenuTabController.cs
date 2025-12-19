@@ -53,4 +53,9 @@ public class MenuTabController : MonoBehaviour
   {
     mainMenu.SetActive(false);
   }
+
+    public void QuitFromButton()
+  {
+      Application.Quit();
+  }
 }
