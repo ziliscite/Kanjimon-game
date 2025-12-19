@@ -12,6 +12,8 @@ public class PlayerManager : MonoBehaviour
     public Vector3 lastPosition;
     public int lastFloor;
     public string sceneName;
+    public int currentLevelIndex;
+    public string playerId;
 
     [Header("Enemy Data")]
     public int enemyBattledID;
