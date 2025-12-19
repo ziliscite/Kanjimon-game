@@ -105,7 +105,7 @@ public class BossSpawner : MonoBehaviour
                 isBossActuallyDead = true;
                 Debug.Log("[BossSpawner] BossManager says boss is dead, overriding JSON data");
             }
-        
+
             BossManager.Instance.SetBossDead(isBossActuallyDead);
         }
     
