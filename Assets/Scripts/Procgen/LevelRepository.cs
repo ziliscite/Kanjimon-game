@@ -27,6 +27,7 @@ using JetBrains.Annotations;
     public int x;
     public int y;
     public int enemyId;
+    public int enemyInstanceIndex;
 }
 
 [Serializable] public class BossPosition

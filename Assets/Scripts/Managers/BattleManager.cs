@@ -131,7 +131,10 @@ public class BattleManager : MonoBehaviour
 
                 if (enemyHealth <= 0)
                 {
-                    HandleEnemyDeath();
+                    PlayerManager.Instance.isWinningBattle = true;
+                    PlayerManager.Instance.playerHP = playerHealth; // update data HP player ke global
+                    state = BattleState.End;
+                    StartCoroutine(ChangeScene());
                     return;
                 }
             }

@@ -10,13 +10,16 @@ public class PlayerManager : MonoBehaviour
     public int expPlayer;
     public int playerLevel;
     public Vector3 lastPosition;
-    public int lastFloor;
+    public int lastFloor = 1;
     public string sceneName;
     public int currentLevelIndex;
     public string playerId;
 
     [Header("Enemy Data")]
     public int enemyBattledID;
+    public int enemyInstanceIndex;
+    public bool isEnemyBoss;
+    
 
     void Awake()
     {
@@ -33,5 +36,12 @@ public class PlayerManager : MonoBehaviour
     public void SetFloor(int level)
     {
         lastFloor = level;
+    }
+    
+    public void SetEnemyData(int enemyID, int instanceIndex, bool isBoss)
+    {
+        enemyBattledID = enemyID;
+        enemyInstanceIndex = instanceIndex;
+        isEnemyBoss = isBoss;
     }
 }

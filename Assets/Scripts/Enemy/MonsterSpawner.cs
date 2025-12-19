@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -9,119 +10,150 @@ public class MonsterSpawner : MonoBehaviour
     [SerializeField] private int prefabNumber = 5;
     [SerializeField] private ObjectPlacer objectPlacer;
     
-    private readonly List<GameObject> _objectInstances = new();
-    
-    // clear all previously placed monsters
     private void ClearPlacedObjects()
     {
-        foreach (var instance in _objectInstances)
-        {
-            if (instance != null) Destroy(instance);
-        }
-        _objectInstances.Clear();
+        EnemyManager.Instance.ClearAllEnemies();
     }
     
-    // place monster prefabs randomly
     private void PlaceMonsters()
     {
         ClearPlacedObjects();
         if (objectPlacer == null || monsterPrefabs == null || monsterPrefabs.Count == 0) return;
         
-        Debug.LogError($"[MonsterSpawner] Placing {prefabNumber} monsters");
+        Debug.Log($"[MonsterSpawner] Placing {prefabNumber} monsters");
         
-        // get all tile pos
         var floorPositions = objectPlacer.GetFloorPositions();
         if (floorPositions.Count == 0) return;
         
-        // place monster prefabs randomly
         for (int i = 0; i < Mathf.Min(prefabNumber, floorPositions.Count); i++)
         {
-            // pick random floor pos
             var randomIndex = Random.Range(0, floorPositions.Count);
             var tilePos = floorPositions[randomIndex];
             
-            // pick random monster from available pool
             var randomMonsterIndex = Random.Range(0, monsterPrefabs.Count);
             var selectedMonster = monsterPrefabs[randomMonsterIndex];
             
-            // convert to world pos, also center it on tile
             var worldPos = objectPlacer.TileToWorldPosition(tilePos);
             
             var instance = Instantiate(selectedMonster, worldPos, Quaternion.identity);
-            _objectInstances.Add(instance);
+            instance.name = i.ToString();
+            EnemyManager.Instance.AddEnemy(instance);
             
-            // make sure no overlap, remove used pos
             floorPositions.RemoveAt(randomIndex);
         }
     }
     
-    // place monsters from save data
     public void PlaceMonstersFromData(List<EnemyPosition> monsterData)
     {
         ClearPlacedObjects();
         if (objectPlacer == null || monsterPrefabs == null || monsterData == null) return;
         
-        Debug.LogError($"[MonsterSpawner] Placing {monsterData.Count} monsters from save data");
-        foreach (var data in monsterData)
+        Debug.Log($"[MonsterSpawner] Original monster data count: {monsterData.Count}");
+        
+        // Filter out the defeated enemy if returning from a won battle
+        List<EnemyPosition> enemiesToPlace = monsterData;
+        if (PlayerManager.Instance != null && PlayerManager.Instance.isWinningBattle)
         {
-            // validate monster id
-            if (data.enemyId < 0 || data.enemyId >= monsterPrefabs.Count) continue;
+            int defeatedIndex = PlayerManager.Instance.enemyInstanceIndex;
+            enemiesToPlace = monsterData.Where(e => e.enemyInstanceIndex != defeatedIndex).ToList();
+            Debug.Log($"[MonsterSpawner] Filtered out defeated enemy at index {defeatedIndex}");
+        }
+        
+        Debug.Log($"[MonsterSpawner] Placing {enemiesToPlace.Count} monsters from save data");
+        
+        int newIndex = 0;
+        foreach (var data in enemiesToPlace)
+        {
+            if (data.enemyId < 0)
+            {
+                Debug.LogWarning($"[MonsterSpawner] Invalid enemy ID: {data.enemyId - 1}");
+                continue;
+            }
             
             var tilePos = new Vector3Int(data.x, data.y, 0);
             var worldPos = objectPlacer.TileToWorldPosition(tilePos);
             
-            var instance = Instantiate(monsterPrefabs[data.enemyId], worldPos, Quaternion.identity);
-            _objectInstances.Add(instance);
+            var instance = Instantiate(monsterPrefabs[data.enemyId - 1], worldPos, Quaternion.identity);
+            
+            // Use sequential index instead of original index
+            instance.name = newIndex.ToString();
+            
+            Debug.Log($"[MonsterSpawner] Spawned enemy {newIndex} (original index: {data.enemyInstanceIndex}) at position {worldPos}");
+            
+            EnemyManager.Instance.AddEnemy(instance);
+            newIndex++;
+        }
+        
+        Debug.Log($"[MonsterSpawner] Total enemies in EnemyManager after spawn: {EnemyManager.Instance.GetEnemyCount()}");
+        
+        // Clean up battle flags after placing enemies
+        if (PlayerManager.Instance != null && PlayerManager.Instance.isWinningBattle)
+        {
+            if (PlayerManager.Instance.isEnemyBoss)
+            {
+                BossManager.Instance.SetBossDead(true);
+            }
+            PlayerManager.Instance.isWinningBattle = false;
+            PlayerManager.Instance.isReturningFromBattle = false;
+            Debug.Log("[MonsterSpawner] Battle cleanup completed");
         }
     }
     
-    // wait till level gen is done
     private IEnumerator PlaceMonstersCoroutine()
     {
         yield return new WaitUntil(() => objectPlacer.IsGenerationCompleted());
         PlaceMonsters();
     }
     
-    // pub method to regen monsters, called by walker on new level gen
     public void OnLevelGenerated()
     {
         StartCoroutine(PlaceMonstersCoroutine());
     }
     
-    // get monster data for saving
     public List<EnemyPosition> GetMonsterData()
     {
         var monsterData = new List<EnemyPosition>();
         var tilemap = objectPlacer.GetGroundTilemap();
         
-        if (tilemap == null) return monsterData;
-        
-        foreach (var instance in _objectInstances)
+        if (tilemap == null)
         {
+            Debug.LogWarning("[MonsterSpawner] Tilemap is null in GetMonsterData");
+            return monsterData;
+        }
+        
+        Debug.Log($"[MonsterSpawner] GetMonsterData: EnemyManager has {EnemyManager.Instance.GetEnemyCount()} enemies");
+        
+        for (int i = 0; i < EnemyManager.Instance.GetEnemyCount(); i++)
+        {
+            var instance = EnemyManager.Instance.GetEnemyAt(i);
             if (instance != null)
             {
                 var pos = tilemap.WorldToCell(instance.transform.position);
+                var enemy = instance.GetComponent<EnemyData>();
                 
-                // find monster id by comparing prefab name
-                int monsterId = -1;
-                var instanceName = instance.name.Replace("(Clone)", "").Trim();
-                
-                for (int i = 0; i < monsterPrefabs.Count; i++)
+                if (enemy != null && enemy.enemyDataSO != null)
                 {
-                    if (monsterPrefabs[i] != null && monsterPrefabs[i].name == instanceName)
-                    {
-                        monsterId = i;
-                        break;
-                    }
+                    monsterData.Add(new EnemyPosition 
+                    { 
+                        enemyId = enemy.enemyDataSO.enemyID, 
+                        x = pos.x, 
+                        y = pos.y, 
+                        enemyInstanceIndex = i  // Use current index, not old index
+                    });
+                    Debug.Log($"[MonsterSpawner] Saved enemy {i} at tile position ({pos.x}, {pos.y})");
                 }
-                
-                if (monsterId != -1)
+                else
                 {
-                    monsterData.Add(new EnemyPosition { enemyId = monsterId, x = pos.x, y = pos.y });
+                    Debug.LogWarning($"[MonsterSpawner] Enemy at index {i} has no EnemyData component");
                 }
+            }
+            else
+            {
+                Debug.LogWarning($"[MonsterSpawner] Enemy at index {i} is null");
             }
         }
         
+        Debug.Log($"[MonsterSpawner] GetMonsterData returning {monsterData.Count} enemy positions");
         return monsterData;
     }
 }
