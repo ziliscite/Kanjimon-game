@@ -12,6 +12,8 @@ public class PlayerManager : MonoBehaviour
     public Vector3 lastPosition;
     public int lastFloor = 1;
     public string sceneName;
+    public int currentLevelIndex;
+    public string playerId;
     
     [Header("Battle Data")]
     public bool isReturningFromBattle = false;

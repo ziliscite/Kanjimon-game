@@ -6,12 +6,13 @@ using System.Collections;
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private EnemyCheckerBox enemyCheckerBox;
+    [SerializeField] private GameObject slashVFX;
     public GameObject enemyOnSight; 
     public int targetEnemyID;
     
     public void OnAttack(InputAction.CallbackContext context)
     {
-        // alergi kurung kurawal kah bos
+        // alergi kurung kurawal kah bos || biarin wle
         if (context.performed) AttackAction();
     }
 
@@ -19,6 +20,10 @@ public class PlayerAttack : MonoBehaviour
     {
         if (enemyCheckerBox != null && enemyCheckerBox.enemyInsideRange)
         {
+            Vector3 centerPos = enemyCheckerBox.transform.position;
+            Instantiate(slashVFX, centerPos, Quaternion.identity);
+            SoundManager.Instance.PlaySFXRandomPitch("SlashSound");
+
             var enemyData = enemyOnSight.GetComponent<EnemyData>().enemyDataSO;
             var enemyInstanceIndex = -1;
             if (int.TryParse(enemyOnSight.name, out int number))

@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
+using System; // [Import this for Action]
 
 public class PopupUI : MonoBehaviour
 {
@@ -21,35 +22,44 @@ public class PopupUI : MonoBehaviour
         turnText.alpha = 0f;
     }
 
-    public void ShowYourTurn()
+    // Added 'Action onComplete' parameter
+    public void ShowYourTurn(Action onComplete = null)
     {
-        Play("Your Turn");
+        Play("Your Turn", onComplete);
     }
 
-    public void ShowEnemyTurn()
+    // Added 'Action onComplete' parameter
+    public void ShowEnemyTurn(Action onComplete = null)
     {
-        Play("Enemy Turn");
+        Play("Enemy Turn", onComplete);
     }
 
-    private void Play(string message)
+    private void Play(string message, Action onComplete)
     {
         DOTween.Kill(textRect);
         DOTween.Kill(turnText);
 
         turnText.text = message;
 
-        // Start dari kiri
+        // Reset positions
         textRect.anchoredPosition = centerPos + Vector2.left * offscreenX;
         turnText.alpha = 0f;
 
         Sequence seq = DOTween.Sequence();
 
+        // Slide In
         seq.Append(textRect.DOAnchorPos(centerPos, moveDuration).SetEase(Ease.OutCubic));
         seq.Join(turnText.DOFade(1f, moveDuration));
 
+        // Wait
         seq.AppendInterval(stayDuration);
 
+        // Slide Out
         seq.Append(textRect.DOAnchorPos(centerPos + Vector2.right * offscreenX, moveDuration).SetEase(Ease.InCubic));
         seq.Join(turnText.DOFade(0f, moveDuration));
+
+        seq.OnComplete(() => {
+            onComplete?.Invoke();
+        });
     }
 }

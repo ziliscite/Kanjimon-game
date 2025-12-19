@@ -50,5 +50,10 @@ public class PlayerMovement : MonoBehaviour
     animator.SetFloat("Y", movement.y);
 
     animator.SetBool("isMove", !context.canceled);
+    if (context.performed)
+        SoundManager.Instance.PlaySFXLoop("WalkSound");
+
+    if (context.canceled)
+        SoundManager.Instance.StopSFXLoop();
   }
 }

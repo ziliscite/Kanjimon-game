@@ -9,6 +9,7 @@ public class EnemySpawner : MonoBehaviour
     public EnemyData SpawnedEnemy { get; private set; }
     public int currentEnemyID;
     public int enemyHealthSpawned;
+    public bool isEnemyBoss;
     
     void Awake()
     {

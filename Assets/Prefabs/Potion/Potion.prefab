@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -6563242267657411818}
   - component: {fileID: 7594323168196667035}
   - component: {fileID: -3646194750045862091}
+  - component: {fileID: 1108520017751639275}
   m_Layer: 0
   m_Name: Potion
   m_TagString: Untagged
@@ -141,3 +142,25 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1.2065611, y: 1.2100037}
   m_Direction: 0
+--- !u!95 &1108520017751639275
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4044845599915691750}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 77b8ad8637f6fde4dbf6cc521aa2cd8f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
