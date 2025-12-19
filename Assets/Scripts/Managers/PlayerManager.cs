@@ -14,7 +14,11 @@ public class PlayerManager : MonoBehaviour
     public string sceneName;
     public int currentLevelIndex;
     public string playerId;
-
+    
+    [Header("Battle Data")]
+    public bool isReturningFromBattle = false;
+    public bool isWinningBattle = false;
+    
     [Header("Enemy Data")]
     public int enemyBattledID;
     public int enemyInstanceIndex;
@@ -43,5 +47,12 @@ public class PlayerManager : MonoBehaviour
         enemyBattledID = enemyID;
         enemyInstanceIndex = instanceIndex;
         isEnemyBoss = isBoss;
+    }
+
+    public void CleanUp()
+    {
+        isWinningBattle = false;
+        isReturningFromBattle = false;
+        Debug.Log("[PlayerManager] Battle cleanup completed");
     }
 }
