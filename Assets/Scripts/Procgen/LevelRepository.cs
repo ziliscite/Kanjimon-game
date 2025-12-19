@@ -48,6 +48,7 @@ using JetBrains.Annotations;
     public List<PotionPosition> potionPositions;
     public List<EnemyPosition> enemyPositions;
     public BossPosition bossPosition;
+    public bool bossDefeated; // Track if boss was defeated on this floor
 }
 
 public class LevelRepository : MonoBehaviour
@@ -145,7 +146,13 @@ public class LevelRepository : MonoBehaviour
         levelData.enemyPositions = monsterData;
         levelData.bossPosition = bossData;
         
-        Debug.Log($"[LevelManager] Saving level {levelId} with {potionData.Count} potions and {monsterData.Count} monsters");
+        // Update boss defeated state from BossManager
+        if (BossManager.Instance != null)
+        {
+            levelData.bossDefeated = BossManager.Instance.IsBossDead();
+        }
+        
+        Debug.Log($"[LevelManager] Saving level {levelId} with {potionData.Count} potions and {monsterData.Count} monsters, bossDefeated={levelData.bossDefeated}");
         SaveLevel(levelData);
     }
     

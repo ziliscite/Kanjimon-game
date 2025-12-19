@@ -72,7 +72,7 @@ public class Walker : MonoBehaviour
         if (PlayerManager.Instance != null && PlayerManager.Instance.isReturningFromBattle)
         {
             Debug.Log("[Walker] Returning from battle - loading saved level");
-            PlayerManager.Instance.isReturningFromBattle = false; // Reset flag
+            // DON'T reset flag here - let LoadFromLevelData handle it after restoring position
             LoadLevel(PlayerManager.Instance.lastFloor, 0); // Load current floor
         }
         else
@@ -417,7 +417,18 @@ public class Walker : MonoBehaviour
 
         if (bossPlacer != null)
         {
-            bossPlacer.PlaceBossFromData(data.bossPosition);
+            if (data.bossPosition != null)
+            {
+                bossPlacer.PlaceBossFromData(data.bossPosition, data.bossDefeated);
+            }
+            else
+            {
+                // kalau null, berarti ga disimpin di save sebelumnya, jadi sekarang idup
+                if (BossManager.Instance != null)
+                {
+                    BossManager.Instance.SetBossDead(false);
+                }
+            }
         }
         
         if (potionPlacer != null)
@@ -427,14 +438,28 @@ public class Walker : MonoBehaviour
 
         if (playerHandler != null)
         {
-            // kalau exit (atas ke bawah), player di kanan entry
-            // kalau entry (bawah ke atas), player di kiri exit
-            if (isExit)
+            // PRIORITY 1: Returning from battle - restore exact saved position
+            if (PlayerManager.Instance != null && PlayerManager.Instance.isReturningFromBattle && PlayerManager.Instance.lastPosition != Vector3.zero)
             {
+                Debug.Log($"[Walker] Restoring player to saved position after battle: {PlayerManager.Instance.lastPosition}");
+                Vector3Int cellPos = groundTilemap.WorldToCell(PlayerManager.Instance.lastPosition);
+                playerHandler.LoadPlayer(new Vector2Int(cellPos.x, cellPos.y));
+            
+                // NOW reset the battle flags and clear saved position
+                PlayerManager.Instance.isReturningFromBattle = false;
+                PlayerManager.Instance.lastPosition = Vector3.zero;
+                PlayerManager.Instance.CleanUp();
+            }
+            // PRIORITY 2: Moving up floors (exit, going down in dungeon)
+            else if (isExit)
+            {
+                Debug.Log("[Walker] Placing player at entry door (moving down floors)");
                 playerHandler.LoadPlayer(new Vector2Int(data.entryDoor.x, data.entryDoor.y) + Vector2Int.right);
             }
+            // PRIORITY 3: Moving down floors (entry, going up from dungeon) or first time loading
             else
             {
+                Debug.Log("[Walker] Placing player at exit door (moving up floors or default)");
                 playerHandler.LoadPlayer(new Vector2Int(data.exitDoor.x, data.exitDoor.y) + Vector2Int.left);
             }
         }
@@ -481,6 +506,16 @@ public class Walker : MonoBehaviour
     public void SaveCurrentLevelState()
     {
         Debug.Log($"[Walker] Saving current level state for floor {PlayerManager.Instance.lastFloor}");
+        if (PlayerManager.Instance != null && playerHandler != null)
+        {
+            var player = playerHandler.GetPlayerInstance();
+            if (player != null)
+            {
+                PlayerManager.Instance.lastPosition = player.transform.position;
+                Debug.Log($"[Walker] Saved player position: {PlayerManager.Instance.lastPosition}");
+            }
+        }
+    
         SaveObjects();
     }
 
@@ -501,16 +536,25 @@ public class Walker : MonoBehaviour
     public void TriggerLoad(int levelIncrement)
     {
         CalculateGridBounds();
-        
-        // Save the current level's objects before loading the next level
         SaveObjects();
-        
+    
         var level = PlayerManager.Instance.lastFloor + levelIncrement;
-        if (level < 1)
+        if (level < 1) return;
+    
+        // MODIFY THIS: Clear saved position when changing floors
+        if (levelIncrement != 0 && PlayerManager.Instance != null)
         {
-            return;
+            PlayerManager.Instance.lastPosition = Vector3.zero; // Clear old position
+            Debug.Log("[Walker] Changing floors - clearing saved player position");
         }
-
+    
+        // ADD THIS: Reset boss when moving to new floor
+        if (levelIncrement > 0 && BossManager.Instance != null)
+        {
+            BossManager.Instance.ResetFloor();
+            Debug.Log("[Walker] Moving to new floor - resetting boss state");
+        }
+    
         PlayerManager.Instance.SetFloor(level);
         LoadLevel(PlayerManager.Instance.lastFloor, levelIncrement);
     }

@@ -171,15 +171,17 @@ public class TeleporterHandler : MonoBehaviour
     
     private void PlaceExit()
     {
-        var player = playerHandler.GetPlayerInstance();
-        var playerPos = groundTilemap.WorldToCell(player.transform.position);
+        var leftmost = playerHandler.GetLeftmostFloorPosition();
         
         // find the farthest index
-        var farthestIndex = GetFarthestPosition(playerPos);
-        if (farthestIndex.HasValue)
+        if (leftmost.HasValue)
         {
-            _exitPosition = new Vector2Int(farthestIndex.Value.x, farthestIndex.Value.y);
-            RenderExit(_exitPosition);
+            var farthestIndex = GetFarthestPosition(new Vector3Int(leftmost.Value.x, leftmost.Value.y, 0));
+            if (farthestIndex.HasValue)
+            {
+                _exitPosition = new Vector2Int(farthestIndex.Value.x, farthestIndex.Value.y);
+                RenderExit(_exitPosition);
+            } 
         }
     }
 
@@ -203,11 +205,15 @@ public class TeleporterHandler : MonoBehaviour
     
     private void PlaceEntry()
     {
-        var player = playerHandler.GetPlayerInstance();
-        var playerPos = groundTilemap.WorldToCell(player.transform.position);
-        _entryPosition = new Vector2Int(playerPos.x, playerPos.y) + Vector2Int.left;
-        // put 1 tile behind player
-        RenderEntry(_entryPosition);
+        var leftmost = playerHandler.GetLeftmostFloorPosition();
+        
+        // find the farthest index
+        if (leftmost.HasValue)
+        {
+            _entryPosition = new Vector2Int(leftmost.Value.x, leftmost.Value.y) + Vector2Int.left;
+            // put 1 tile behind player
+            RenderEntry(_entryPosition);
+        }
     }
 
     private void LoadEntry()

@@ -131,6 +131,13 @@ public class BattleManager : MonoBehaviour
                 {
                     PlayerManager.Instance.isWinningBattle = true;
                     PlayerManager.Instance.playerHP = playerHealth; // update data HP player ke global
+                    
+                    if (PlayerManager.Instance.isEnemyBoss && BossManager.Instance != null)
+                    {
+                        BossManager.Instance.SetBossDead(true);
+                        Debug.Log("[BattleManager] Boss defeated - setting boss dead flag");
+                    }
+                    
                     state = BattleState.End;
                     StartCoroutine(ChangeScene());
                     return;

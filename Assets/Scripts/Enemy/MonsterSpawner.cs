@@ -55,8 +55,15 @@ public class MonsterSpawner : MonoBehaviour
         if (PlayerManager.Instance != null && PlayerManager.Instance.isWinningBattle)
         {
             int defeatedIndex = PlayerManager.Instance.enemyInstanceIndex;
-            enemiesToPlace = monsterData.Where(e => e.enemyInstanceIndex != defeatedIndex).ToList();
-            Debug.Log($"[MonsterSpawner] Filtered out defeated enemy at index {defeatedIndex}");
+            if (defeatedIndex == -1)
+            {
+                Debug.Log("[MonsterSpawner] Defeated enemy was a boss (index -1), handled by BossManager");
+            }
+            else
+            {
+                enemiesToPlace = monsterData.Where(e => e.enemyInstanceIndex != defeatedIndex).ToList();
+                Debug.Log($"[MonsterSpawner] Filtered out defeated enemy at index {defeatedIndex}");
+            }
         }
         
         Debug.Log($"[MonsterSpawner] Placing {enemiesToPlace.Count} monsters from save data");
@@ -82,20 +89,6 @@ public class MonsterSpawner : MonoBehaviour
             
             EnemyManager.Instance.AddEnemy(instance);
             newIndex++;
-        }
-        
-        Debug.Log($"[MonsterSpawner] Total enemies in EnemyManager after spawn: {EnemyManager.Instance.GetEnemyCount()}");
-        
-        // Clean up battle flags after placing enemies
-        if (PlayerManager.Instance != null && PlayerManager.Instance.isWinningBattle)
-        {
-            if (PlayerManager.Instance.isEnemyBoss)
-            {
-                BossManager.Instance.SetBossDead(true);
-            }
-            PlayerManager.Instance.isWinningBattle = false;
-            PlayerManager.Instance.isReturningFromBattle = false;
-            Debug.Log("[MonsterSpawner] Battle cleanup completed");
         }
     }
     

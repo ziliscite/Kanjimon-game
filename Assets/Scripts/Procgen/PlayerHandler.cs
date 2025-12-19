@@ -48,7 +48,7 @@ public class PlayerHandler : MonoBehaviour
         return false;
     }
 
-    private Vector2Int? GetLeftmostFloorPosition()
+    public Vector2Int? GetLeftmostFloorPosition()
     {
         Vector2Int? leftmost = null;
     

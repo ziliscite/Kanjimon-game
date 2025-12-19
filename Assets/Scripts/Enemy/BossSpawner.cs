@@ -91,10 +91,29 @@ public class BossSpawner : MonoBehaviour
         _objectInstance = bossInstance;
     }
     
-    public void PlaceBossFromData(BossPosition bossPosition)
+    public void PlaceBossFromData(BossPosition bossPosition, bool bossDefeated)
     {
         ClearPlacedObjects();
         if (bossPrefab == null || objectPlacer == null || bossPosition == null) return;
+        
+        bool isBossActuallyDead = bossDefeated;
+        if (BossManager.Instance != null)
+        {
+            // Jika BossManager bilang boss mati, override data JSON
+            if (BossManager.Instance.IsBossDead())
+            {
+                isBossActuallyDead = true;
+                Debug.Log("[BossSpawner] BossManager says boss is dead, overriding JSON data");
+            }
+        
+            BossManager.Instance.SetBossDead(isBossActuallyDead);
+        }
+    
+        if (isBossActuallyDead)
+        {
+            Debug.Log("[BossSpawner] Boss is dead, not spawning");
+            return;
+        }
         
         var tilePos = new Vector3Int(bossPosition.x, bossPosition.y, 0);
         var worldPos = objectPlacer.TileToWorldPosition(tilePos);
@@ -107,10 +126,6 @@ public class BossSpawner : MonoBehaviour
     {
         yield return new WaitUntil(() => objectPlacer.IsGenerationCompleted());
         PlaceBoss();
-        if (BossManager.Instance != null)
-        {
-            BossManager.Instance.ResetFloor();
-        }
     }
     
     public void OnLevelGenerated()
@@ -120,10 +135,17 @@ public class BossSpawner : MonoBehaviour
     
     public BossPosition GetBossPosition()
     {
-        var bossPosition = new BossPosition();
-        var tilemap = objectPlacer.GetGroundTilemap();
+        // Don't save boss position if boss is dead
+        if (BossManager.Instance != null && BossManager.Instance.IsBossDead())
+        {
+            Debug.Log("[BossSpawner] Boss is dead, not saving position");
+            return null;
+        }
         
-        if (tilemap == null) return bossPosition;
+        BossPosition bossPosition = null;
+        
+        var tilemap = objectPlacer.GetGroundTilemap();
+        if (tilemap == null) return null;
         
         if (_objectInstance != null)
         {

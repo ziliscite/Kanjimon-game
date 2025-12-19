@@ -46,4 +46,11 @@ public class PlayerManager : MonoBehaviour
         enemyInstanceIndex = instanceIndex;
         isEnemyBoss = isBoss;
     }
+
+    public void CleanUp()
+    {
+        isWinningBattle = false;
+        isReturningFromBattle = false;
+        Debug.Log("[PlayerManager] Battle cleanup completed");
+    }
 }
