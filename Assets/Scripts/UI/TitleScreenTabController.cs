@@ -24,6 +24,7 @@ public class TitleScreenTabController : MonoBehaviour
         tabContents[i].SetActive(false);
       }
     }
+    
   }
 
   void Update()
@@ -38,5 +39,10 @@ public class TitleScreenTabController : MonoBehaviour
     tabContents[tabIndex].SetActive(false);
     mainTab.SetActive(false);
     currentTabIndex = -1;
+  }
+  
+  public void QuitFromButton()
+  {
+      Application.Quit();
   }
 }

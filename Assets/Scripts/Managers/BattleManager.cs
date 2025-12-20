@@ -44,6 +44,8 @@ public class BattleManager : MonoBehaviour
 
     [Header("Delays")]
     [SerializeField] private float postEvaluationDelay = 2f; 
+    // Tambahkan di bagian [Header("Battle Data")]
+    private int currentSessionScore = 0;
 
     IEnumerator Start()
     {
@@ -70,10 +72,14 @@ public class BattleManager : MonoBehaviour
         playerShieldSlider.value = 0;
 
         state = BattleState.PlayerTurn;
+popUpUI.ShowYourTurn(() => {
+    UIButtons.SetActive(true);
+});
 
-        popUpUI.ShowYourTurn(() => {
-            UIButtons.SetActive(true); 
-        });
+        
+        // Reset skor untuk battle baru
+        currentSessionScore = 0;
+        BattleDataManager.Instance.ResetSessionScore();
     }
 
     public void PlayerAttack() { 
@@ -111,50 +117,64 @@ public class BattleManager : MonoBehaviour
     }
 
     public void OnActionEvaluated(string action, float score)
+{
+    if (state != BattleState.WaitingLLM)
     {
-        if (state != BattleState.WaitingLLM) return;
+        Debug.Log("Ignored duplicate evaluation");
+        return;
+    }
 
-        bool success = score > 10f;
-        if (success)
+    Debug.Log($"[Battle] Action: {action}, Score: {score}");
+    bool success = score > 10f;
+
+    if (success)
+    {
+        // Akumulasi skor ketika jawaban benar
+        int scoreToAdd = Mathf.RoundToInt(score);
+        currentSessionScore += scoreToAdd;
+        // BattleDataManager.Instance.AddScore(scoreToAdd);
+        
+        Debug.Log($"[Battle] Correct answer! Score added: {scoreToAdd}. Session total: {currentSessionScore}");
+
+        if (action == "attack")
         {
-            if (action == "attack")
-            {
-                enemyHealth -= Mathf.RoundToInt(score);
-                Instantiate(slashVFX, spawnPoint.transform.position, Quaternion.identity);
-                SoundManager.Instance.PlaySFXRandomPitch("SlashSound");
-                UpdateEnemyHPBar();
+            enemyHealth -= scoreToAdd;
+            UpdateEnemyHPBar();
 
-                if (playerAnimator != null)
+            if (enemyHealth <= 0)
+            {
+                PlayerManager.Instance.isWinningBattle = true;
+                PlayerManager.Instance.playerHP = playerHealth;
+
+                // Simpan data battle ke JSON
+                bool isBossBattle = PlayerManager.Instance.isEnemyBoss;
+                // BattleDataManager.Instance.SaveBattleResult(playerHealth, isBossBattle);
+
+                if (isBossBattle && BossManager.Instance != null)
                 {
-                    playerAnimator.SetTrigger("AttackTrigger");
+                    BossManager.Instance.SetBossDead(true);
+                    Debug.Log("[BattleManager] Boss defeated - setting boss dead flag");
                 }
 
-                if (enemyHealth <= 0)
-                {
-                    PlayerManager.Instance.isWinningBattle = true;
-                    PlayerManager.Instance.playerHP = playerHealth; // update data HP player ke global
-                    
-                    if (PlayerManager.Instance.isEnemyBoss && BossManager.Instance != null)
-                    {
-                        BossManager.Instance.SetBossDead(true);
-                        Debug.Log("[BattleManager] Boss defeated - setting boss dead flag");
-                    }
-                    
-                    state = BattleState.End;
-                    StartCoroutine(ChangeScene());
-                    return;
-                }
-            }
-            else if (action == "defend")
-            {
-                playerShield += Mathf.RoundToInt(score);
-                playerShield = Mathf.Clamp(playerShield, 0, 100);
-                UpdateShieldBar();
+                state = BattleState.End;
+                StartCoroutine(ChangeScene());
+                return;
             }
         }
-        
-        StartCoroutine(DelayedEnemyTurn());
+        else if (action == "defend")
+        {
+            playerShield += scoreToAdd;
+            playerShield = Mathf.Clamp(playerShield, 0, 100);
+            UpdateShieldBar();
+        }
     }
+    else
+    {
+        Debug.Log("[Battle] Incorrect answer - no score added");
+    }
+
+    StartCoroutine(DelayedEnemyTurn());
+}
 
     private void HandleEnemyDeath()
     {

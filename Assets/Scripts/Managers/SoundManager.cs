@@ -23,6 +23,8 @@ public class SoundManager : MonoBehaviour
 
     [Header("Settings")]
     [Range(0f, 1f)] public float masterVolume = 1f;
+    [Range(0f, 1f)] public float musicVolume = 1f;
+    [Range(0f, 1f)] public float sfxVolume = 1f;
 
     // Dictionary for fast lookup (Optimization)
     private Dictionary<string, AudioClip> sfxDictionary;
@@ -72,24 +74,25 @@ public class SoundManager : MonoBehaviour
     }
 
     // --- PLAY BY NAME ---
-    public void PlayMusic(string name)
+public void PlayMusic(string name)
+{
+    if (musicDictionary.ContainsKey(name))
     {
-        if (musicDictionary.ContainsKey(name))
-        {
-            AudioClip clip = musicDictionary[name];
-            if (musicSource.clip == clip) return; 
+        AudioClip clip = musicDictionary[name];
+        if (musicSource.clip == clip) return;
 
-            musicSource.clip = clip;
-            musicSource.volume = masterVolume;
-            musicSource.Play();
-        }
+        musicSource.clip = clip;
+        musicSource.volume = musicVolume * masterVolume;
+        musicSource.Play();
     }
+}
 
-    public void PlaySFX(string name)
-    {
-        if (sfxDictionary.ContainsKey(name))
-            sfxSource.PlayOneShot(sfxDictionary[name], masterVolume);
-    }
+public void PlaySFX(string name)
+{
+    if (sfxDictionary.ContainsKey(name))
+        sfxSource.PlayOneShot(sfxDictionary[name], sfxVolume * masterVolume);
+}
+
     
     public void PlaySFXLoop(string name)
     {
@@ -126,4 +129,31 @@ public class SoundManager : MonoBehaviour
             sfxSource.pitch = originalPitch; 
         }
     }
+
+    // ================= SLIDER WRAPPERS =================
+
+// Slider (0–1)
+public void SetMasterVolume(float value)
+{
+    masterVolume = value;
+
+    musicSource.volume = masterVolume;
+    sfxSource.volume = masterVolume;
+    loopFXSource.volume = masterVolume;
+}
+
+public void SetMusicVolume(float value)
+{
+    musicVolume = Mathf.Clamp01(value);
+    musicSource.volume = musicVolume * masterVolume;
+}
+
+// Slider SFX
+public void SetSFXVolume(float value)
+{
+    sfxVolume = Mathf.Clamp01(value);
+    sfxSource.volume = sfxVolume * masterVolume;
+    loopFXSource.volume = sfxVolume * masterVolume;
+}
+
 }
